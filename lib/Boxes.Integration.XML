@@ -1,0 +1,457 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Boxes.Integration</name>
+    </assembly>
+    <members>
+        <member name="T:Boxes.Integration.ContainerSetup.TypeExtensions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Process.TopologicalProcessOrder">
+            <summary>
+            Process the packages using a simple Topological order
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Process.IProcessOrder">
+            <summary>
+            Set the order to process the packages 
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Process.IProcessOrder.Arrange(System.Collections.Generic.IEnumerable{Boxes.Package})">
+            <summary>
+            arranges the packages ready to be processed
+            </summary>
+            <param name="packages">the lastest, unprocess packages</param>
+            <returns>the packags in order, ready to be processed</returns>
+        </member>
+        <member name="T:Boxes.Integration.Process.TopologicalSortExtensions">
+            <summary>
+            helpful extensions
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Process.TopologicalSortExtensions.PerformTopologicalSort``1(System.Collections.Generic.IEnumerable{Boxes.Integration.Process.Node{``0}})">
+            <summary>
+            perform a topological sort
+            </summary>
+            <typeparam name="T">the type the nodes will represent</typeparam>
+            <param name="nodes">the list of nodes to sort</param>
+            <returns>sorted by dependency</returns>
+        </member>
+        <member name="M:Boxes.Integration.Process.TopologicalSortExtensions.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            for each
+            </summary>
+            <typeparam name="T">the type in the collection</typeparam>
+            <param name="collection">the collection</param>
+            <param name="action">action to perform on each item</param>
+        </member>
+        <member name="T:Boxes.Integration.Setup.BoxesIntergrationSetup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.IBoxesIntegrationSetup">
+            <summary>
+            Provides areas to alter/extend the process which 
+            <see cref="N:Boxes.Integration"/> adds on top of Boxes
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IBoxesIntegrationSetup.AddPackgeLevelFilter(Boxes.Integration.Setup.IPackageTypesFilter,System.String[])">
+            <summary>
+            Add a package level pre filter
+            </summary>
+            <param name="typesFilterTypes">the filter</param>
+            <param name="packgeName">packages which </param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IBoxesIntegrationSetup.SetDefaultPackgeLevelFilter(Boxes.Integration.Setup.IPackageTypesFilter)">
+            <summary>
+            override the default package level filter
+            </summary>
+            <param name="typeTypesFilter">the filter</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IBoxesIntegrationSetup.RegisterPreProcessTask(Boxes.Tasks.IBoxesTask{Boxes.Integration.ProcessPackageContext})">
+            <summary>
+            register a task which will run before the main process, use with caution
+            </summary>
+            <param name="task">the task to add</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IBoxesIntegrationSetup.RegisterProcessTask(Boxes.Tasks.IBoxesTask{Boxes.Integration.ProcessPackageContext})">
+            <summary>
+            register a task in the main process, this will run in the order prescribed by the <see cref="T:Boxes.Integration.Process.IProcessOrder"/>
+            All the tasks in this process will run against a single package at a time
+            </summary>
+            <param name="task">task to add</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IBoxesIntegrationSetup.SetProcessOrder(Boxes.Integration.Process.IProcessOrder)">
+            <summary>
+            override the how the packages will be sorted for the main processing.
+            </summary>
+            <param name="orderPackages">the process order</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IBoxesIntegrationSetup.SetGlobalPackgeLevelFilter(Boxes.Integration.Setup.IPackageFilter)">
+            <summary>
+            set a global filter, this will always be run to filter the types.
+            </summary>
+            <param name="packageFilter">the package filter to use</param>
+        </member>
+        <member name="P:Boxes.Integration.Setup.BoxesSetup.IocRunner">
+            <summary>
+            register the types with an IoC container (the runner)
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.BoxesSetup.IocTask">
+            <summary>
+            register the types with an IoC container (the task)
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.BoxesSetup.ProcessOrder">
+            <summary>
+            define the order to process the packages
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.BoxesSetup.ExtensionRunner">
+            <summary>
+            find any extension points and run them
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.BoxesWrapperBase`1">
+            <summary>
+            Wrapper around Boxes, and extends it with an IoC container 
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.IBoxesWrapper">
+            <summary>
+            takes Boxes and extends it to provide lifestyle management with Dependency Injection along with the (isolated) module loading
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.IBoxesWrapper.Setup``1(Boxes.Discovering.IPackageScanner)">
+            <summary>
+            Setup Boxes with the <see cref="T:Boxes.Loading.ILoader"/> and default <see cref="T:Boxes.Discovering.IPackageScanner"/> 
+            </summary>
+            <typeparam name="TLoader">the type of the loader to use with boxes</typeparam>
+            <param name="defaultPackageScanner">the default scanner to use to find modules with</param>
+        </member>
+        <member name="M:Boxes.Integration.IBoxesWrapper.DiscoverPackages(Boxes.Discovering.IPackageScanner)">
+            <summary>
+            Discover packages, using a supplied <see cref="T:Boxes.Discovering.IPackageScanner"/>
+            </summary>
+            <param name="packageScanner">package scanner to discovery packages with</param>
+        </member>
+        <member name="M:Boxes.Integration.IBoxesWrapper.DiscoverPackages">
+            <summary>
+            Discover packages, using the default <see cref="T:Boxes.Discovering.IPackageScanner"/>
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.IBoxesWrapper.LoadPackages">
+            <summary>
+            Load packages ready for the application to use
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.IBoxesWrapper.PackageRegistry">
+            <summary>
+            package registry, this will provide the information of what modules have been loaded
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.IBoxesWrapper.BoxesContainerSetup">
+            <summary>
+            A mechanism to handle type registration with the underlying IoC container.
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.IBoxesWrapper.BoxesIntegrationSetup">
+            <summary>
+            A mechanism to modify/extend the <see cref="M:Boxes.Integration.IBoxesWrapper.LoadPackages"/> process 
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.IBoxesWrapper.DependencyResolver">
+            <summary>
+            The Dependency resolver
+            </summary>
+        </member>
+        <member name="F:Boxes.Integration.BoxesWrapperBase`1._processPipeline">
+            <summary>
+            the main process line, add tasks to this, and they will be executed
+            in the order defined by <see cref="T:Boxes.Integration.Process.IProcessOrder"/>
+            </summary>
+        </member>
+        <member name="F:Boxes.Integration.BoxesWrapperBase`1._preProcessPipeline">
+            <summary>
+            this is the pre-process pipeline, however its not recommended to use this one.
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.BoxesWrapperBase`1.Initalise(`0)">
+            <summary>
+            Dev notes in the remarks
+            </summary>
+            <remarks>
+            Register with the IoC and Set the following properties 
+                <see cref="P:Boxes.Integration.BoxesWrapperBase`1.DependencyResolver"/>, 
+                <see cref="P:Boxes.Integration.IBoxesWrapper.BoxesContainerSetup"/>, 
+            and <see cref="P:Boxes.Integration.IBoxesWrapper.PackageRegistry"/>  
+            </remarks>
+            <param name="container">the container which was passed to the ctor</param>
+        </member>
+        <member name="M:Boxes.Integration.BoxesWrapperBase`1.Setup``1(Boxes.Discovering.IPackageScanner)">
+            <summary>
+            Sets up the <see cref="T:Boxes.Discovering.IPackageScanner"/> and <see cref="T:Boxes.Loading.ILoader"/>
+            Dev notes in the remarks
+            </summary>
+            <remarks>
+            Register the <see cref="T:Boxes.Discovering.IPackageScanner"/> and <see cref="T:Boxes.Loading.ILoader"/>
+            </remarks>
+            <typeparam name="TLoader"></typeparam>
+            <param name="defaultPackageScanner"></param>
+        </member>
+        <member name="P:Boxes.Integration.BoxesWrapperBase`1.Container">
+            <summary>
+            access to the container (builder in the case of Autofac?)
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.BoxesWrapperBase`1.DependencyResolver">
+            <summary>
+            The Dependency resolver
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Extensions.IBoxesExtension">
+            <summary>
+            Extend <see cref="N:Boxes.Integration"/>,
+            this runs before any other package is registered with the IoC, to allow room for extensions
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Extensions.IBoxesExtension.Extend(Boxes.Integration.IBoxesWrapper)">
+            <summary>
+            extend the boxes through the boxes wrapper.
+            </summary>
+            <param name="boxesWrapper">the wrapper will give access to Boxes, IoC registrations and the Dependency Resolver</param>
+        </member>
+        <member name="T:Boxes.Integration.ExtensionManifest">
+            <summary>
+            Manifest information for a package, this also includes any extensions the package includes
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.ExtensionManifest.Extensions">
+            <summary>
+            list of all the modules which extend Boxes functionality
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.IPackageTypesFilter">
+            <summary>
+            Filter types which are to be registered with the IoC
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IPackageTypesFilter.FilterTypes(Boxes.Package)">
+            <summary>
+            filter out the types for a package
+            </summary>
+            <param name="package">the package to extract the types from</param>
+            <returns>a set of types which will be used for IoC registration</returns>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IPackageFilter.FilterPackages(System.Collections.Generic.IEnumerable{Boxes.Package})">
+            <summary>
+            filter out the types for a package
+            </summary>
+            <param name="package">the package to extract the types from</param>
+            <returns>a set of types which will be used for IoC registration</returns>
+        </member>
+        <member name="T:Boxes.Integration.Tasks.BootupPackageTask">
+            <summary>
+            task to handle <see cref="T:Boxes.Integration.Extensions.IPackageBootup"/>
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.ProcessPackageContext">
+            <summary>
+            the context of a package while it is being processed
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.ProcessPackageContext.#ctor(Boxes.Package,System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            default ctor
+            </summary>
+            <param name="package">package</param>
+            <param name="dependencyTypes">types of interest</param>
+        </member>
+        <member name="P:Boxes.Integration.ProcessPackageContext.Package">
+            <summary>
+            the package
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.ProcessPackageContext.DependencyTypes">
+            <summary>
+            all the types of interest
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.ContainerSetup.IBoxesContainerSetup">
+            <summary>
+            setup how LifeStyles will be managed 
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.ContainerSetup.IBoxesContainerSetup.RegisterLifeStyle``2">
+            <summary>
+            Simple Dependency association with a LifeStyle manager of the IoC container
+            </summary>
+            <typeparam name="TLifeStyle">The lifestyle manager to use</typeparam>
+            <typeparam name="TInterface">The Dependency interface to register with the lifecycle</typeparam>
+        </member>
+        <member name="M:Boxes.Integration.ContainerSetup.IBoxesContainerSetup.RegisterLifeStyle(Boxes.Integration.ContainerSetup.Registration)">
+            <summary>
+            Advanced way to register a type (can be as simple as does it implement a Dependency or to apply a filter)
+            </summary>
+            <param name="registration">The registration with details on how setup the IoC with the types which match the where clause</param>
+        </member>
+        <member name="P:Boxes.Integration.ContainerSetup.IBoxesContainerSetup.Registrations">
+            <summary>
+            all the registration to run the types through
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Extensions.IPackageBootup">
+            <summary>
+            this will load any logic to set the package in a state which it is ready to run. To use you must register <see cref="T:Boxes.Integration.Tasks.BootupPackageTask"/>
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Extensions.IPackageBootup.Load(Boxes.Integration.IDependencyResolver)">
+            <summary>
+            initialise the package
+            </summary>
+            <param name="dependencyResolver"></param>
+        </member>
+        <member name="T:Boxes.Integration.Extensions.IPackageSetup">
+            <summary>
+            this will run only once, when the package is first installed.
+            the migrations logic should be run in this class too. To use you must register <see cref="T:Boxes.Integration.Tasks.SetupPackageTask"/>
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Extensions.IPackageSetup.Setup(Boxes.Integration.IDependencyResolver)">
+            <summary>
+            sets up the module ready to be loaded, <see cref="T:Boxes.Integration.Extensions.IPackageBootup"/>
+            </summary>
+            <param name="dependencyResolver">the main container, allow you access to any registered objects</param>
+        </member>
+        <member name="P:Boxes.Integration.Extensions.IPackageSetup.HasAlreadyBeenSetup">
+            <summary>
+            determines if the Setup method should run
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.IDependencyResolver">
+            <summary>
+            Dependency resolver interface to be used by <see cref="N:Boxes.Integration"/>
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.IDependencyResolver.Resolve``1">
+            <summary>
+            resolve an instance
+            </summary>
+            <typeparam name="T">the service to be resolved</typeparam>
+            <returns>an instance of the service</returns>
+        </member>
+        <member name="M:Boxes.Integration.IDependencyResolver.Resolve(System.Type)">
+            <summary>
+            resolve an instance
+            </summary>
+            <param name="type">the service to be resolved</param>
+            <returns>an instance of the service</returns>
+        </member>
+        <member name="M:Boxes.Integration.IDependencyResolver.ResolveAll``1">
+            <summary>
+            resolve all instance for a service
+            </summary>
+            <typeparam name="T">the service to be resolved</typeparam>
+            <returns>all instances for the service</returns>
+        </member>
+        <member name="M:Boxes.Integration.IDependencyResolver.ResolveAll(System.Type)">
+            <summary>
+            resolve all instance for a service
+            </summary>
+            <param name="type">the service to be resolved</param>
+            <returns>all instances for the service</returns>
+        </member>
+        <member name="M:Boxes.Integration.IDependencyResolver.Release(System.Object)">
+            <summary>
+            handles the releasing of an instance
+            </summary>
+            <param name="obj">the object to release</param>
+        </member>
+        <member name="T:Boxes.Integration.LoaderProxy">
+            <summary>
+            Loader proxy allows a thrid party class to see which new packages have
+            been loaded
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.LoaderProxy.#ctor(Boxes.Loading.ILoader)">
+            <summary>
+            ctor
+            </summary>
+            <param name="proxied">loader to proxy</param>
+        </member>
+        <member name="M:Boxes.Integration.LoaderProxy.ClearLoadedPackages">
+            <summary>
+            clears the load packages, in case you need to do multiple loads
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.LoaderProxy.Packages">
+            <summary>
+            any new loaded packages
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.ContainerSetup.RegisterWith">
+            <summary>
+            Register with which services
+            </summary>
+        </member>
+        <member name="F:Boxes.Integration.ContainerSetup.RegisterWith.AllInterfaces">
+            <summary>
+            All the interfaces
+            </summary>
+        </member>
+        <member name="F:Boxes.Integration.ContainerSetup.RegisterWith.FirstInterface">
+            <summary>
+            Only the first interface
+            </summary>
+        </member>
+        <member name="F:Boxes.Integration.ContainerSetup.RegisterWith.SelfOnly">
+            <summary>
+            With only the class itself
+            </summary>
+        </member>
+        <member name="F:Boxes.Integration.ContainerSetup.RegisterWith.SelfAndAllInterfaces">
+            <summary>
+            With only the class itself
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Tasks.SetupPackageTask">
+            <summary>
+            task to handle <see cref="T:Boxes.Integration.Extensions.IPackageSetup"/>
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Tasks.TypeScannerTask">
+            <summary>
+            Generic task which may be helpful
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:Boxes.Integration.Extensions.XmlManifest2012ExtensionReader" -->
+        <member name="T:Boxes.Integration.Process.Node`1">
+            <summary>
+            These nodes are used to implement a topological sort
+            </summary>
+            <typeparam name="T">the item associated with the node</typeparam>
+            <remarks>
+            based on http://www.patrickdewane.com/2009/03/topological-sort.html
+            </remarks>
+        </member>
+        <member name="P:Boxes.Integration.Process.Node`1.Element">
+            <summary>
+            The instance this node represents
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Process.Node`1.Visited">
+            <summary>
+            Indicates if the node has been visited/processed
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Process.Node`1.Dependencies">
+            <summary>
+            dependencies of this node
+            </summary>
+        </member>
+    </members>
+</doc>

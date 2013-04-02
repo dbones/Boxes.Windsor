@@ -1,0 +1,588 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Boxes.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Boxes.AssemblyReference">
+            <summary>
+            contains information about an assembly, this is required to load it into the app domain
+            note this is used to lazy load the assembly.
+            </summary>
+        </member>
+        <member name="M:Boxes.AssemblyReference.#ctor(Boxes.FileScanning.File,System.Reflection.AssemblyName)">
+            <summary>
+            ctor
+            </summary>
+            <param name="file">the associated file</param>
+            <param name="assemblyName">the assemblies name</param>
+        </member>
+        <member name="M:Boxes.AssemblyReference.LoadFromFile">
+            <summary>
+            load the assembly from the file
+            </summary>
+        </member>
+        <member name="M:Boxes.AssemblyReference.AssociateWithExisting(System.Reflection.Assembly)">
+            <summary>
+            provide an instance of the assembly to associate with this assemblyReference
+            </summary>
+            <param name="assembly">the instance of the assembly</param>
+        </member>
+        <member name="P:Boxes.AssemblyReference.File">
+            <summary>
+            the assemblies file
+            </summary>
+        </member>
+        <member name="P:Boxes.AssemblyReference.AssemblyName">
+            <summary>
+            the assemblies name
+            </summary>
+        </member>
+        <member name="P:Boxes.AssemblyReference.Assembly">
+            <summary>
+            the actual assembly, once it has been loaded.
+            </summary>
+        </member>
+        <member name="P:Boxes.AssemblyReference.Module">
+            <summary>
+            the assemblies module information
+            </summary>
+        </member>
+        <member name="T:Boxes.Discovering.ParrallelPackageScanner">
+            <summary>
+            scans the packages in parallel.
+            </summary>
+        </member>
+        <member name="T:Boxes.Discovering.PackageScanner">
+            <summary>
+            Default package scanner.
+            </summary>
+        </member>
+        <member name="T:Boxes.Discovering.IPackageScanner">
+            <summary>
+            used to discover installed packages
+            </summary>
+        </member>
+        <member name="M:Boxes.Discovering.IPackageScanner.Scan">
+            <summary>
+            returns all the installed packages
+            </summary>
+        </member>
+        <member name="M:Boxes.Discovering.PackageScanner.#ctor(System.String[])">
+            <summary>
+            create a package scanner
+            </summary>
+            <param name="folders">pass in any root directory which contains packages</param>
+        </member>
+        <member name="M:Boxes.Discovering.PackageScanner.SetManifestTask(Boxes.Tasks.IBoxesTask{Boxes.ScanContext})">
+            <summary>
+            supply the default manifest reading task (the default one is <see cref="!:XmlManifest2012Task"/>)
+            </summary>
+            <param name="manifestTask">the manifest task to use</param>
+        </member>
+        <member name="M:Boxes.Discovering.PackageScanner.SetAssemblyTask(Boxes.Tasks.IBoxesTask{Boxes.ScanContext})">
+            <summary>
+            supply the default assembly reading (Pre loading) task (the default one is <see cref="T:Boxes.Tasks.AssemblyPreLoadTask"/>)
+            </summary>
+            <param name="assemblyTask">the assembly task to use</param>
+        </member>
+        <member name="M:Boxes.Discovering.PackageScanner.RegisterTask(Boxes.Tasks.IBoxesTask{Boxes.ScanContext})">
+            <summary>
+            add extra scanning tasks, this allows you to handle files as they are discovered
+            </summary>
+            <param name="packageTask"></param>
+        </member>
+        <member name="M:Boxes.Discovering.PackageScanner.Scan">
+            <summary>
+            returns all the installed packages
+            </summary>
+        </member>
+        <member name="M:Boxes.Discovering.ParrallelPackageScanner.#ctor(System.String[])">
+            <summary>
+            create a package scanner
+            </summary>
+            <param name="folders">pass in any root directory which contains packages</param>
+        </member>
+        <member name="T:Boxes.Exceptions.MissingManifestException">
+            <summary>
+            Have you copied the manifest file into your package directory?
+            
+            raise this when the manifest file is missing.
+            </summary>
+        </member>
+        <member name="M:Boxes.Exceptions.MissingManifestException.#ctor(Boxes.Package)">
+            <summary>
+            ctor
+            </summary>
+            <param name="package">the package with a missing manifest</param>
+        </member>
+        <member name="P:Boxes.Exceptions.MissingManifestException.Package">
+            <summary>
+            This package is missing its manifest file.
+            </summary>
+        </member>
+        <member name="T:Boxes.Exceptions.XmlManifestNotSupportedException">
+            <summary>
+            raise this when there there is no xml reader to support the current namespace
+            </summary>
+        </member>
+        <member name="T:Boxes.Extensions">
+            <summary>
+            Extension methods go here :)
+            </summary>
+        </member>
+        <member name="M:Boxes.Extensions.AddRange``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            add a range of items to a collection
+            </summary>
+            <typeparam name="T">the item type</typeparam>
+            <param name="collection">the collection to add too</param>
+            <param name="collectionToAdd">the items to add</param>
+        </member>
+        <member name="M:Boxes.Extensions.Force``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            force the iteration over a list (use this to force the <see cref="M:Boxes.Tasks.PipilineExecutor`1.Execute(System.Collections.Generic.IEnumerable{`0})"/> to run)
+            </summary>
+            <typeparam name="T">the type in the list</typeparam>
+            <param name="collection">the list to iterate over</param>
+        </member>
+        <member name="M:Boxes.Extensions.CreatePipeline``1(System.Collections.Generic.IEnumerable{Boxes.Tasks.IBoxesTask{``0}})">
+            <summary>
+            creates a <see cref="T:Boxes.Tasks.PipilineExecutor`1"/> with tasks to run
+            </summary>
+            <typeparam name="T">the type to work with</typeparam>
+            <param name="tasks">tasks to add to the pipeline</param>
+            <returns>a configured pipeline</returns>
+        </member>
+        <member name="T:Boxes.Loading.DefaultLoader">
+            <summary>
+            loads the package normally (all packages share dll's)
+            </summary>
+        </member>
+        <member name="T:Boxes.Loading.ILoader">
+            <summary>
+            used to control the loading of a package
+            </summary>
+        </member>
+        <member name="M:Boxes.Loading.ILoader.LoadPackage(Boxes.Package)">
+            <summary>
+            load a package, take control over how to load the assemblies inside the packages.
+            </summary>
+            <param name="package">the package to load</param>
+        </member>
+        <member name="T:Boxes.Dependencies.DependencyMatrix">
+            <summary>
+            this tries to see if a module (or even a package) can be loaded.
+            </summary>
+            <remarks>
+            as dependencies are detailed in a manifest file, however these are at package level.
+            </remarks>
+        </member>
+        <member name="T:Boxes.Dependencies.DependencyModule">
+            <summary>
+            contains information about a modules dependency (other packages)
+            </summary>
+            <remarks>
+            a package can expose many modules and depend on many modules
+            
+            this makes a module have multiple package dependencies
+            </remarks>
+        </member>
+        <member name="T:Boxes.Loading.IsolatedLoader">
+            <summary>
+            loads a package's internal dependencies into the same AppDomain
+            </summary>
+            <remarks>
+            this allows 
+                for package A to depend on Log4Net 1.2
+                for package B to depend on Log4Net 2.0
+                for package C to depend on Log4Net 1.2
+            
+            and each Log4Net will be loaded individually into the AppDomain
+            </remarks>
+        </member>
+        <member name="M:Boxes.Loading.IsolatedLoader.#ctor(Boxes.PackageRegistry)">
+            <summary>
+            create a isolated loader, pass in an instance
+            </summary>
+            <param name="packageRegistry">the package registry to work with</param>
+        </member>
+        <member name="T:Boxes.Loading.SeperateAppDomainLoader">
+            <summary>
+            loads a package in another app domain
+            </summary>
+        </member>
+        <member name="T:Boxes.Exceptions.MissingImportsException">
+            <summary>
+            raise this when there are missing import dependencies
+            </summary>
+        </member>
+        <member name="M:Boxes.Exceptions.MissingImportsException.#ctor(System.Collections.Generic.IEnumerable{Boxes.Module})">
+            <summary>
+            ctor
+            </summary>
+            <param name="dependenciesNotPresent">the missing dependencies</param>
+        </member>
+        <member name="T:Boxes.PackageRegistry">
+            <summary>
+            This is the entry point of the application. it exposes functions to
+            Discover and Load packages
+            </summary>
+            <code>
+            <pre>
+                PackageRegistry packageRegistry = new PackageRegistry();
+                packageRegistry.DiscoverPackages(new PackageScanner("some base dir"));
+                using (var loader = new IsolatedLoader(packageRegistry))
+                {
+                    packageRegistry.LoadPackages(loader);    
+                }
+            </pre>
+            </code>
+        </member>
+        <member name="M:Boxes.PackageRegistry.DiscoverPackages(Boxes.Discovering.IPackageScanner)">
+            <summary>
+            Find packages, this will update the packages property, with details on if a Package can be loaded
+            </summary>
+            <param name="packageScanner">the package scanner to use</param>
+        </member>
+        <member name="M:Boxes.PackageRegistry.LoadPackages(Boxes.Loading.ILoader)">
+            <summary>
+            loads all the packages which have their dependences satisfied. 
+            </summary>
+            <param name="loader">the loader to apply when loading the package's assemblies into the AppDomain</param>
+        </member>
+        <member name="P:Boxes.PackageRegistry.Packages">
+            <summary>
+            The packages which have been found
+            </summary>
+        </member>
+        <member name="T:Boxes.ScanContext">
+            <summary>
+            this contains information about a file during discovery
+            </summary>
+        </member>
+        <member name="P:Boxes.ScanContext.Package">
+            <summary>
+            the package the file belongs too
+            </summary>
+        </member>
+        <member name="P:Boxes.ScanContext.File">
+            <summary>
+            the file in the discovery context
+            </summary>
+        </member>
+        <member name="T:Boxes.FileScanning.File">
+            <summary>
+            contains information about a file
+            </summary>
+        </member>
+        <member name="P:Boxes.FileScanning.File.FullName">
+            <summary>
+            the full name, directory + name
+            </summary>
+        </member>
+        <member name="P:Boxes.FileScanning.File.Name">
+            <summary>
+            the name of the file
+            </summary>
+        </member>
+        <member name="P:Boxes.FileScanning.File.Location">
+            <summary>
+            the directory of the file
+            </summary>
+        </member>
+        <member name="P:Boxes.FileScanning.File.ContentsAsText">
+            <summary>
+            the file contents as a string
+            </summary>
+        </member>
+        <member name="P:Boxes.FileScanning.File.ContentsAsBytes">
+            <summary>
+            the file contents in a byte[]
+            </summary>
+        </member>
+        <member name="T:Boxes.FileScanning.IScanner">
+            <summary>
+            Scanner used to find files and directories
+            </summary>
+        </member>
+        <member name="M:Boxes.FileScanning.IScanner.FindFiles">
+            <summary>
+            find the files
+            </summary>
+            <returns>returns all the files</returns>
+        </member>
+        <member name="M:Boxes.FileScanning.IScanner.FindDirectories">
+            <summary>
+            find directories
+            </summary>
+            <returns>returns the locations of directories</returns>
+        </member>
+        <member name="T:Boxes.FileScanning.OneDeepDiectoryScanner">
+            <summary>
+            only looks one folder deep, this in indented to list the modules
+            </summary>
+        </member>
+        <member name="T:Boxes.FileScanning.DirectoryScanner">
+            <summary>
+            Scans all directories including sub directories
+            </summary>
+        </member>
+        <member name="T:Boxes.Tasks.AssemblyPreLoadTask">
+            <summary>
+            Adds an assembly to the package
+            </summary>
+        </member>
+        <member name="T:Boxes.Tasks.FileTaskBase">
+            <summary>
+            base class to handle files during discovery
+            </summary>
+        </member>
+        <member name="T:Boxes.Tasks.IBoxesTask`1">
+            <summary>
+            this represents a Boxes task. these are applied normally within a Pipeline
+            </summary>
+            <typeparam name="T">what type the task will be executed against</typeparam>
+        </member>
+        <member name="M:Boxes.Tasks.IBoxesTask`1.CanHandle(`0)">
+            <summary>
+            a function to see if the task will support the current instance,
+            this is normally called before the execute
+            </summary>
+        </member>
+        <member name="M:Boxes.Tasks.IBoxesTask`1.Execute(`0)">
+            <summary>
+            executes the tasks logic
+            </summary>
+            <param name="item">the item on which the task will operate on</param>
+        </member>
+        <member name="T:Boxes.Manifest">
+            <summary>
+            contains information about a Package
+            </summary>
+        </member>
+        <member name="P:Boxes.Manifest.Name">
+            <summary>
+            Name of the package, recommend a full name such as [CompanyName or Product].[Package] i.e. Dbones.ApplicationBus
+            </summary>
+        </member>
+        <member name="P:Boxes.Manifest.Version">
+            <summary>
+            the version of the package
+            </summary>
+        </member>
+        <member name="P:Boxes.Manifest.Description">
+            <summary>
+            a description of the package, what does it do
+            </summary>
+        </member>
+        <member name="P:Boxes.Manifest.Exports">
+            <summary>
+            the modules exposed in this package
+            </summary>
+        </member>
+        <member name="P:Boxes.Manifest.Imports">
+            <summary>
+            the modules this package requires to run
+            </summary>
+        </member>
+        <member name="T:Boxes.Module">
+            <summary>
+            a module contains functionality or UI which the host application or another module can implement.
+            
+            in most cases a module will be an assembly (dll).
+            
+            each package will contain modules (dll's), such as import and expose modules.
+            </summary>
+        </member>
+        <member name="P:Boxes.Module.AssemblyName">
+            <summary>
+            the assemblies name, this is not guaranteed to have a value
+            </summary>
+        </member>
+        <member name="P:Boxes.Module.Version">
+            <summary>
+            The assembly version, this is used to provide extra meta data, but not to identify a package
+            </summary>
+        </member>
+        <member name="P:Boxes.Module.Name">
+            <summary>
+            The modules name, this is to uniquely identify the module
+            </summary>
+        </member>
+        <member name="T:Boxes.PackageReadyToLoad">
+            <summary>
+            raised when a package is ready to load
+            </summary>
+            <param name="package"></param>
+        </member>
+        <member name="T:Boxes.Package">
+            <summary>
+            Package contains all the elements to load an extension into the application
+            </summary>
+        </member>
+        <member name="M:Boxes.Package.AssembliesToLoad">
+            <summary>
+            load this modules in this package
+            </summary>
+        </member>
+        <member name="M:Boxes.Package.GetInternalAssembly(System.Reflection.AssemblyName)">
+            <summary>
+            try and get an internal reference of an assembly in this package
+            </summary>
+            <param name="name">assembly name to try an retrieve</param>
+            <returns>the instance of the assembly</returns>
+        </member>
+        <member name="M:Boxes.Package.GetInternalAssembly(Boxes.Module)">
+            <summary>
+            try and get an internal reference of an assembly in this package
+            </summary>
+            <param name="module">the module</param>
+            <returns></returns>
+        </member>
+        <member name="M:Boxes.Package.SetManifest(Boxes.Manifest)">
+            <summary>
+            sets the manifest for this package
+            </summary>
+            <param name="manifest">manifest</param>
+        </member>
+        <member name="M:Boxes.Package.DependencyDiscovered(Boxes.Module)">
+            <summary>
+            update this package when one of its dependencies have been discovered
+            </summary>
+            <param name="dependency"></param>
+        </member>
+        <member name="M:Boxes.Package.AddAssembly(System.Reflection.AssemblyName,Boxes.FileScanning.File)">
+            <summary>
+            add an assembly to the package, this can be an exposed or internal (if the assembly is ready)
+            </summary>
+            <param name="name">name of the assembly</param>
+            <param name="file">the assembly</param>
+        </member>
+        <member name="E:Boxes.Package.OnReadyToLoad">
+            <summary>
+            Raised when this package is ready to load.
+            </summary>
+        </member>
+        <member name="P:Boxes.Package.Name">
+            <summary>
+            name of the package
+            </summary>
+        </member>
+        <member name="P:Boxes.Package.Manifest">
+            <summary>
+            the manifest for the package
+            </summary>
+        </member>
+        <member name="P:Boxes.Package.Location">
+            <summary>
+            location of the package
+            </summary>
+        </member>
+        <member name="P:Boxes.Package.Loaded">
+            <summary>
+            if the modules have been loaded
+            </summary>
+        </member>
+        <member name="P:Boxes.Package.CanLoad">
+            <summary>
+            false if there are dependencies which are not found
+            </summary>
+        </member>
+        <member name="P:Boxes.Package.LoadedAssemblies">
+            <summary>
+            exposed assemblies which have been loaded
+            </summary>
+        </member>
+        <member name="T:Boxes.Tasks.PipilineExecutor`1">
+            <summary>
+            creates a pipeline with yielding. This class allows to multiple tasks to
+            be executed against each item.
+            </summary>
+            <typeparam name="T">The type of item which will be yielded over</typeparam>
+        </member>
+        <member name="M:Boxes.Tasks.PipilineExecutor`1.Register(Boxes.Tasks.TaskRunner{`0})">
+            <summary>
+            provide a task to be applied in this pipeline (you can just register the IBoxesTask)
+            </summary>
+            <param name="taskRunner">the taskRunner for a IBoxesTask</param>
+        </member>
+        <member name="M:Boxes.Tasks.PipilineExecutor`1.Register``1(``0)">
+            <summary>
+            provide a task to be applied in this pipeline
+            </summary>
+            <typeparam name="TTask">the task type</typeparam>
+            <param name="task">the task to apply on each item</param>
+        </member>
+        <member name="T:Boxes.Tasks.TaskRunner`1">
+            <summary>
+            runs a task, works with a yielding IEnumerable and the PipelineExecutor
+            </summary>
+            <typeparam name="T">the type of item the task and task runner will work with</typeparam>
+        </member>
+        <member name="M:Boxes.Tasks.TaskRunner`1.#ctor(Boxes.Tasks.IBoxesTask{`0})">
+            <summary>
+            ctor
+            </summary>
+            <param name="task">the associated Task</param>
+        </member>
+        <member name="M:Boxes.Tasks.TaskRunner`1.Execute(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            executes the task over an IEnumberable of items
+            </summary>
+            <param name="items">the collection to apply the task to</param>
+            <returns>a yield list, where the task will be applied to each item</returns>
+        </member>
+        <member name="T:Boxes.Tasks.TxtManifestTask">
+            <summary>
+            TODO implement this class
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:Boxes.Tasks.XmlManifest2012Reader" -->
+        <member name="T:Boxes.Tasks.XmlManifestReader">
+            <summary>
+            xml reader, will read the default format
+            </summary>
+            <code>
+            <pre>
+            <manifest xmlns="http://DefineANamespaceHere">
+                <name>Acme.Test</name>
+                <version>1.0</version>
+                <description>this is an awesome module which will add cool features</description>
+                <exports>
+                    <assembly name="Acme.Test.Bus" version="3.1.0" />
+                    <assembly name="Acme.Test.Core" />
+                </exports>
+                <imports>
+                    <dependency name="BlueSky.Ioc" version="3.1.0" />
+                    <dependency name="Acme.Data" />
+                </imports>
+            </manifest>
+            </pre>
+            </code>
+        </member>
+        <member name="M:Boxes.Tasks.XmlManifestReader.ReadManifest(System.Xml.Linq.XElement)">
+            <summary>
+            reads an xml element into a manifest
+            </summary>
+            <param name="manifestXml">the xml element which contains the manifest details</param>
+            <returns>a fully populated manifest</returns>
+        </member>
+        <member name="P:Boxes.Tasks.XmlManifestReader.BoxesNs">
+            <summary>
+            namespace which the reader supports
+            </summary>
+        </member>
+        <member name="T:Boxes.Tasks.XmlManifestTask">
+            <summary>
+            task to read an xml manifest file.
+            </summary>
+        </member>
+        <member name="M:Boxes.Tasks.XmlManifestTask.AddXmlManifestReader(Boxes.Tasks.XmlManifestReader)">
+            <summary>
+            add a reader to run during the loading of a XML manifest file
+            </summary>
+            <param name="reader"></param>
+        </member>
+    </members>
+</doc>
