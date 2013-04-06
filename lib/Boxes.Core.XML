@@ -170,6 +170,18 @@
             </summary>
             <param name="package">the package to load</param>
         </member>
+        <member name="F:Boxes.Loading.LoaderBase.Loaded">
+            <summary>
+            The Global list of loaded assemblies, these assemblies are SHARED
+            between the packages and main program
+            </summary>
+        </member>
+        <member name="M:Boxes.Loading.DefaultLoader.#ctor(Boxes.PackageRegistry)">
+            <summary>
+            create a isolated loader, pass in an instance
+            </summary>
+            <param name="packageRegistry">the package registry to work with</param>
+        </member>
         <member name="T:Boxes.Dependencies.DependencyMatrix">
             <summary>
             this tries to see if a module (or even a package) can be loaded.
