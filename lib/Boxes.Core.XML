@@ -178,7 +178,7 @@
         </member>
         <member name="M:Boxes.Loading.DefaultLoader.#ctor(Boxes.PackageRegistry)">
             <summary>
-            create a isolated loader, pass in an instance
+            create a default loader, pass in an instance
             </summary>
             <param name="packageRegistry">the package registry to work with</param>
         </member>
