@@ -1,4 +1,4 @@
-Thanks for downloading this Boxes.Core package.
+Thanks for downloading this Boxes.Windsor package.
 You can find full list of changes in changes.txt
 
 Documentation:		- http://docs.dbones.co.uk/boxes.MainPage.ashx

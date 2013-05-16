@@ -5,6 +5,6 @@ Boxes is a package discovery and isolation framework for building compositional 
 
 Boxes.Windsor - ultilises Boxes.Core and provides a possible way to support package composition via a container.
 
-Documentation to come
+Documentation:		- http://docs.dbones.co.uk/boxes.MainPage.ashx
 
 Boxes is Apache 2.0 licensed.

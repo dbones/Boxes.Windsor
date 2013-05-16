@@ -1,6 +1,6 @@
 0.2.x
 ==============
-updated to support .02 versions of Core and Integration projects
+updated to support 0.2 versions of Core and Integration projects
 improved nuget package information
 
 0.1.x
