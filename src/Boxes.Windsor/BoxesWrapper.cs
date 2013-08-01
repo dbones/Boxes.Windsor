@@ -13,45 +13,20 @@
 // limitations under the License.
 namespace Boxes.Windsor
 {
-    using Castle.MicroKernel.Registration;
     using Castle.Windsor;
-    using Discovering;
     using Integration;
-    using Integration.ContainerSetup;
-    using Loading;
+    using Integration.Factories;
+    using Integration.InternalIoc;
+    using Integration.Setup;
 
-    public class BoxesWrapper: BoxesWrapperBase<IWindsorContainer>
+
+    public class BoxesWrapper: BoxesWrapperBase<IWindsorContainer, IWindsorContainer>
     {
-        private IWindsorContainer _container;
-    
-        public BoxesWrapper():this(new WindsorContainer()) { }
-
-        public BoxesWrapper(IWindsorContainer container) : base(container) { }
-
-        protected override void Initalise(IWindsorContainer container)
+        protected override void Initialize(IInternalContainer internalContainer)
         {
-            _container = container;
-            container.Register(
-                Component.For<PackageRegistry>().LifestyleSingleton(),
-                Component.For<IBoxesContainerSetup>().ImplementedBy<BoxesContainerSetup>().LifestyleSingleton(),
-                Component.For<IDependencyResolver>().ImplementedBy<DependencyResolver>().LifestyleSingleton(),
-                Component.For<IWindsorContainer>().Instance(container).LifestyleSingleton()
-                );
-        }
-
-        public override IDependencyResolver DependencyResolver { get { return _container.Resolve<IDependencyResolver>(); } }
-
-        public override void Setup<TLoader>(IPackageScanner defaultPackageScanner)
-        {
-            _container.Register(
-                Component.For<ILoader>().ImplementedBy<TLoader>().LifestyleSingleton(),
-                Component.For<IPackageScanner>().UsingFactoryMethod(kernal => defaultPackageScanner).LifestyleSingleton()
-                );
-        }
-
-        public override  void Dispose()
-        {
-            _container.Dispose();
+            internalContainer.Add(typeof(IIocFactory<,>), typeof(IocFactory)); //hmmm, do not like that much
+            internalContainer.Add(typeof(IDependencyResolverFactory), typeof(DependencyResolverFactory));
+            internalContainer.Add(typeof(IRegistrationTaskMapper<>), typeof(RegistrationTaskMapper));
         }
     }
 }

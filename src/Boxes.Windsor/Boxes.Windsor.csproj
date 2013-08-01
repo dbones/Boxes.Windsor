@@ -57,12 +57,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdvancedRegistrationTask.cs" />
-    <Compile Include="BoxesContainerSetup.cs" />
     <Compile Include="BoxesWrapper.cs" />
     <Compile Include="DependencyResolver.cs" />
+    <Compile Include="DependencyResolverFactory.cs" />
+    <Compile Include="IocFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleRegistrationTask.cs" />
+    <Compile Include="Register.cs" />
+    <Compile Include="RegistrationTask.cs" />
+    <Compile Include="RegistrationTaskMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

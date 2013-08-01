@@ -4,10 +4,499 @@
         <name>Boxes.Integration</name>
     </assembly>
     <members>
-        <member name="T:Boxes.Integration.ContainerSetup.TypeExtensions">
+        <member name="T:Boxes.Integration.Extensions.ISetupBoxesExtension`1">
             <summary>
-            
+            this is the class which will setup a <see cref="T:Boxes.Integration.Extensions.IBoxesExtensionWithSetup"/>
             </summary>
+        </member>
+        <member name="M:Boxes.Integration.Extensions.ISetupBoxesExtension`1.CanHandle(`0)">
+            <summary>
+            this allows the setup to refine which extension it will extend, in the event where
+            the generic parameter does not provide a concrete class, thus provides limited filtering.
+            </summary>
+            <param name="extension">the extension to be configured</param>
+            <returns>true if this setup will configure the extension</returns>
+        </member>
+        <member name="M:Boxes.Integration.Extensions.ISetupBoxesExtension`1.Configure(`0)">
+            <summary>
+            setup the boxes extension
+            </summary>
+            <param name="extension">the extension to setup</param>
+        </member>
+        <member name="T:Boxes.Integration.Extensions.IBoxesExtensionWithSetup">
+            <summary>
+            Extend <see cref="N:Boxes.Integration"/>, its similar to the <see cref="T:Boxes.Integration.Extensions.IBoxesExtension"/> 
+            however these types of extension require some form of setup, <see cref="T:Boxes.Integration.Extensions.ISetupBoxesExtension`1"/>.
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Extensions.IBoxesExtension">
+            <summary>
+            Extend <see cref="N:Boxes.Integration"/>,
+            this runs before any other package is registered with the applications IoC, to allow room for extensions
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Factories.IIocSetup`1">
+            <summary>
+            A Setup to use with the IoC (this should be injected into the <see cref="T:Boxes.Integration.Factories.IIocFactory`2"/>)
+            </summary>
+            <typeparam name="TBuilder">the IoC setup</typeparam>
+        </member>
+        <member name="M:Boxes.Integration.Factories.IIocSetup`1.Configure(`0)">
+            <summary>
+            configure the main container
+            </summary>
+            <param name="builder">the main container builder, (this should be before any registrations)</param>
+        </member>
+        <member name="M:Boxes.Integration.Factories.IIocSetup`1.ConfigureChild(`0)">
+            <summary>
+            configure a child container
+            </summary>
+            <param name="builder">the child builder, (this should be before any registrations)</param>
+        </member>
+        <member name="T:Boxes.Integration.InternalIoc.IInternalContainer">
+            <summary>
+            A simple internal container, which will manage the services available in Boxes.
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.InternalIoc.Registration">
+            <summary>
+            a registration of a contract with a given service.
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.InternalIoc.Registration.IsDefault">
+            <summary>
+            is this set via boxes, or an extension
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.InternalIoc.Registration.IsAllowedToBeOverridden">
+            <summary>
+            indicate if the component is allowed to be overridden
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.InternalContainerExtensions">
+            <summary>
+            some extensions for the internal container
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.InternalIoc.InternalInternalContainer">
+            <summary>
+            this container is a simple internalContainer which handles all contracts as singletons, (very limited functionality)
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.Filters.DefaultTypeRegistrationFilter">
+            <summary>
+            the default will return all exported types
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.Filters.ITypeRegistrationFilter">
+            <summary>
+            Filter types which are to be registered with the IoC
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Setup.Filters.ITypeRegistrationFilter.FilterTypes(Boxes.Package)">
+            <summary>
+            filter out the types for a package
+            </summary>
+            <param name="package">the package to extract the types from</param>
+            <returns>a set of types which will be used for IoC registration</returns>
+        </member>
+        <member name="T:Boxes.Integration.Setup.IRegistrationTaskMapper`1">
+            <summary>
+            this provides a mechanism to create the required boxes tasks for registration
+            </summary>
+            <typeparam name="TBuilder">the IoC builder</typeparam>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IRegistrationTaskMapper`1.CreateRegisterTask(Boxes.Integration.Setup.RegistrationMeta)">
+            <summary>
+            create a boxes registration task from the <see cref="T:Boxes.Integration.Setup.RegistrationMeta"/>
+            </summary>
+            <param name="registration">the registration to be tasked up</param>
+        </member>
+        <member name="T:Boxes.Integration.Setup.IDefaultContainerSetup`1">
+            <summary>
+            the tenants container setup
+            </summary>
+            <typeparam name="TBuilder">the ioc builder class</typeparam>
+        </member>
+        <member name="T:Boxes.Integration.Setup.IContainerSetup`1">
+            <summary>
+            setup how LifeStyles will be managed
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.IContainerSetup">
+            <summary>
+            the setup for this area of the application
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IContainerSetup.AddRegistration(Boxes.Integration.Setup.Registrations.IRegister)">
+            <summary>
+            Register a type (can be as simple as does it implement a Dependency or to apply a filter)
+            </summary>
+            <param name="registration">The registration with details on how setup the IoC with the types which match the where clause</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IContainerSetup.SetDefaultFilter(Boxes.Integration.Setup.Filters.ITypeRegistrationFilter)">
+            <summary>
+            override the default package filter (this will be used across all packages)
+            </summary>
+            <param name="typeTypesFilter">the filter</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IContainerSetup.AddPackgeLevelFilter(Boxes.Integration.Setup.Filters.ITypeRegistrationFilter,System.String[])">
+            <summary>
+            set a filter for a particular package, some packages may require their own filters
+            </summary>
+            <param name="typesFilterTypes">the filter</param>
+            <param name="packgeName">packages which </param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IContainerSetup.GetTypeRegistrationFilter(System.String)">
+            <summary>
+            get the filter for a given package
+            </summary>
+            <param name="packageName">name of the package</param>
+            <returns>null if there is not filter</returns>
+        </member>
+        <member name="P:Boxes.Integration.Setup.IContainerSetup.DefaultTypeRegistrationFilter">
+            <summary>
+            the default filter to find exported classes with
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.IContainerSetup`1.Registrations">
+            <summary>
+            all the registration to run the types through
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.ContainerSetupBase`1">
+            <summary>
+            abstract for the <see cref="T:Boxes.Integration.Setup.IContainerSetup`1"/>, inherit this in the IoC project
+            </summary>
+            <typeparam name="TBuilder">the builder which the IoC will use</typeparam>
+        </member>
+        <member name="T:Boxes.Integration.Exceptions.ServiceTypeDoesNotMatchInstanceException">
+            <summary>
+            raise when trying to set the instance of a service inside the internal ioc, when the instance does not match the service
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Exceptions.ServiceTypeDoesNotMatchInstanceException.Service">
+            <summary>
+            service which the instance is supposed to be registered with
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Exceptions.ServiceTypeDoesNotMatchInstanceException.Instance">
+            <summary>
+            the instance being registered
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Exceptions.FailedTrustException">
+            <summary>
+            raise this when the application fails trust
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Exceptions.FailedTrustException.Context">
+            <summary>
+            the context
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Trust.Contexts.BoxesExtensions.AssemblyFromPackageTrustContext">
+            <summary>
+            check to see if an assembly/module from a package is ok (Boxes Extension)
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Trust.Contexts.TrustContext">
+            <summary>
+            the base trust context 
+            note this class is empty allowing for context to be almost anything
+            </summary>
+            <remarks>
+            ensure what you do use as a context it should be sealed
+            </remarks>
+        </member>
+        <member name="P:Boxes.Integration.Trust.Contexts.BoxesExtensions.AssemblyFromPackageTrustContext.Assembly">
+            <summary>
+            the assembly/module in question
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Trust.Contexts.BoxesExtensions.AssemblyFromPackageTrustContext.Package">
+            <summary>
+            package the assembly resides in
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Trust.Contexts.BoxesExtensions.SetupFromPackageTrustContext">
+            <summary>
+            check to see if a package is allowed to configure a component (Boxes Extension)
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Trust.Contexts.BoxesExtensions.SetupFromPackageTrustContext.Contract">
+            <summary>
+            the contract being setup
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Trust.Contexts.BoxesExtensions.SetupFromPackageTrustContext.Setup">
+            <summary>
+            the class which will setup the contract
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Trust.Contexts.BoxesExtensions.SetupFromPackageTrustContext.Package">
+            <summary>
+            the package where the setup resides
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.TypeExtensions">
+            <summary>
+            some type extensions
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.TypeExtensions.Is``1(System.Type)">
+            <summary>
+            returns of the current type is equal to the generic
+            </summary>
+            <typeparam name="TService">compare the type to this</typeparam>
+            <param name="type">the type to compare</param>
+        </member>
+        <member name="M:Boxes.Integration.TypeExtensions.AllInterfaces(System.Type)">
+            <summary>
+            Get all the interfaces this class implements
+            </summary>
+            <param name="type">the type of interest</param>
+        </member>
+        <member name="M:Boxes.Integration.TypeExtensions.FirstInterface(System.Type)">
+            <summary>
+            The first interface a type implements
+            </summary>
+            <param name="type">the type of interest</param>
+        </member>
+        <member name="M:Boxes.Integration.TypeExtensions.SelfAndAllInterfaces(System.Type)">
+            <summary>
+            Gets all the interfaces this type implements, it also adds the type of interest to the result set
+            </summary>
+            <param name="type">the type of interest</param>
+        </member>
+        <member name="T:Boxes.Integration.StringExtension">
+            <summary>
+            couple of string extensions
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.StringExtension.FormatWith(System.String,System.Object[])">
+            <summary>
+            format the string, "{0} world".FormatWith("Hello");
+            </summary>
+            <param name="str"></param>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Boxes.Integration.Setup.Registrations.IRegister">
+            <summary>
+            This class provides a mechanism to setup the registration of types with the underlying IoC.
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.Registrations.IRegister.RegistrationMeta">
+            <summary>
+            meta information about the registration
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.Registrations.IRegister`2">
+            <summary>
+            This class provides a mechanism to setup the registration of types with the underlying IoC.
+            </summary>
+            <typeparam name="TScope">The signature for the scope/lifestyle</typeparam>
+            <typeparam name="TConfiguration">the IoC direct configuration for the current registration</typeparam>
+        </member>
+        <member name="M:Boxes.Integration.Setup.Registrations.IRegister`2.Where(System.Predicate{System.Type})">
+            <summary>
+            apply a filter (pattern) to find which types this registration will apply too
+            </summary>
+            <param name="where">the pattern to find the types this registration applies too</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.Registrations.IRegister`2.AssociateWith(Boxes.Integration.Setup.Registrations.Contracts)">
+            <summary>
+            which contracts to associate the current type with
+            </summary>
+            <param name="contracts">select the appropriate contracts to register this class with</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.Registrations.IRegister`2.AssociateWith(System.Func{System.Type,System.Collections.Generic.IEnumerable{System.Type}})">
+            <summary>
+            which contracts to associate the current type with
+            </summary>
+            <param name="contracts">provide a list of contracts to associate the current type with</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.Registrations.IRegister`2.AssociateWith(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            which contracts to associate the current type with
+            </summary>
+            <param name="contracts">provide a list of contracts to associate the current type with</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.Registrations.IRegister`2.Ctor(System.Func{System.Object})">
+            <summary>
+            supply a ctor to use, apply this in the Configure Method, as this will allow direct access
+            to the actual IoC's registration
+            </summary>
+            <param name="factoryMethod">the ctor to use</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.Registrations.IRegister`2.LifeStyle(`0)">
+            <summary>
+            the life style of the type (scope and lifestyle are considered to be the same thing at this point)
+            </summary>
+            <param name="lifeStyle">the life style to use</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.Registrations.IRegister`2.Scope(`0)">
+            <summary>
+            the scope of the type (scope and lifestyle are considered to be the same thing at this point)
+            </summary>
+            <param name="scope">the scope to use</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.Registrations.IRegister`2.Configure(System.Action{Boxes.Integration.Setup.Registrations.RegisterContext{`1}})">
+            <summary>
+            direct access to the IoC's registration, Recommended for the more advanced setup's
+            </summary>
+            <param name="cfg">ioc's registration</param>
+        </member>
+        <member name="T:Boxes.Integration.Setup.Registrations.RegisterBase`2">
+            <summary>
+            This class provides a mechanism to setup the registration of types with the underlying IoC.
+            </summary>
+            <remarks>
+            note this is abstract, it is inherited by the container implementation, 
+            this was to make the API easier to work with 
+            IE new Register() VS new Register[Type, WindsorContainer]() 
+            the latter is not do friendly
+            </remarks>
+        </member>
+        <member name="T:Boxes.Integration.Setup.Registrations.RegisterContext`1">
+            <summary>
+            a register context holds all the information required for someone to have complete control
+            over a single types registration.
+            </summary>
+            <typeparam name="TConfiguration">the underlying IoC registration type</typeparam>
+        </member>
+        <member name="P:Boxes.Integration.Setup.Registrations.RegisterContext`1.Configuration">
+            <summary>
+            the configuration of the underlying IoC registration
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.Registrations.RegisterContext`1.Type">
+            <summary>
+            the type the configuration is for
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.RegistrationContext`1">
+            <summary>
+            the context for the registration
+            </summary>
+            <typeparam name="TBuilder">the current builder</typeparam>
+        </member>
+        <member name="P:Boxes.Integration.Setup.RegistrationContext`1.Type">
+            <summary>
+            the type to register
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.RegistrationContext`1.Builder">
+            <summary>
+            the builder to register it with
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Exceptions.CreateLoaderException">
+            <summary>
+            there is no <see cref="T:Boxes.Integration.Factories.ICreateLoader"/> registered for this type
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Exceptions.CreateLoaderException.LoaderType">
+            <summary>
+            the loader which requires a creator
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Factories.FuncCreateLoader`1">
+            <summary>
+            creates a Loader, based on a Func which is passed in via the ctor
+            </summary>
+            <typeparam name="TLoader"></typeparam>
+        </member>
+        <member name="T:Boxes.Integration.Factories.ICreateLoader">
+            <summary>
+            create a loader
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Factories.ICreateLoader.Ctor(Boxes.PackageRegistry)">
+            <summary>
+            creates an instance of a loader
+            </summary>
+            <param name="packageRegistry">the current <see cref="T:Boxes.PackageRegistry"/></param>
+            <returns>the loader instance</returns>
+        </member>
+        <member name="T:Boxes.Integration.Factories.IDependencyResolverFactory">
+            <summary>
+            create an instance of a dependency resolver
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Factories.IDependencyResolverFactory.CreateResolver(System.Object)">
+            <summary>
+            create an instance of a dependency resolver
+            </summary>
+            <param name="container">the container which the dependency resolver will wrap around</param>
+            <returns>a dependency resolver</returns>
+        </member>
+        <member name="T:Boxes.Integration.Factories.IIocFactory`2">
+            <summary>
+            create instances of containers as required
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Factories.IIocFactory`2.CreateBuilder">
+            <summary>
+            create an instance of the IoC Builder
+            </summary>
+            <returns>an IoC builder, in most cases this may just be the IoC container</returns>
+        </member>
+        <member name="M:Boxes.Integration.Factories.IIocFactory`2.CreateBuilder(`1)">
+            <summary>
+            create an instance of the IoC Builder for a child container
+            </summary>
+            <param name="parentContainer">the parent IoC container</param>
+            <returns>a IoC builder, in most cases this may just be the child IoC container</returns>
+        </member>
+        <member name="M:Boxes.Integration.Factories.IIocFactory`2.CreateContainer(`0)">
+            <summary>
+            Creates an instance of the main container
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Factories.IIocFactory`2.CreateChildContainer(`1,`0)">
+            <summary>
+            Creates a child container, off the main container
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Factories.LoaderFactory">
+            <summary>
+            Provides the way to create a <see cref="T:Boxes.Loading.ILoader"/>, you can register custom loaders here too
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Factories.LoaderFactory.AddCreateLoader``1(Boxes.Integration.Factories.ICreateLoader)">
+            <summary>
+            register a way to create a loader
+            </summary>
+            <typeparam name="TLoader">the loader type</typeparam>
+            <param name="createLoader">the way to create it</param>
+        </member>
+        <member name="M:Boxes.Integration.Factories.LoaderFactory.AddCreateLoader``1(System.Func{Boxes.PackageRegistry,``0})">
+            <summary>
+            register a way to create a loader, using a Lambda Func
+            </summary>
+            <typeparam name="TLoader">the loader type</typeparam>
+            <param name="ctor">the func which can create the loader</param>
+        </member>
+        <member name="M:Boxes.Integration.Factories.LoaderFactory.CreateLoader``1(Boxes.PackageRegistry)">
+            <summary>
+            creates the required loader
+            </summary>
+            <typeparam name="TLoader">the loader type</typeparam>
+            <param name="packageRegistry">the current <see cref="T:Boxes.PackageRegistry"/></param>
+            <returns>fully constructed loader</returns>
+        </member>
+        <member name="T:Boxes.Integration.ObjectExtensions">
+            <summary>
+            object level extensions
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.ObjectExtensions.TryDispose(System.Object)">
+            <summary>
+            this will try to dispose of the current object, it will run the IDosable interface, if it is implemented
+            </summary>
+            <param name="obj">the object to try to dispose of</param>
         </member>
         <member name="T:Boxes.Integration.Process.TopologicalProcessOrder">
             <summary>
@@ -23,8 +512,8 @@
             <summary>
             arranges the packages ready to be processed
             </summary>
-            <param name="packages">the lastest, unprocess packages</param>
-            <returns>the packags in order, ready to be processed</returns>
+            <param name="packages">the latest, unprocessed packages</param>
+            <returns>the packages in order, ready to be processed</returns>
         </member>
         <member name="T:Boxes.Integration.Process.TopologicalSortExtensions">
             <summary>
@@ -47,183 +536,72 @@
             <param name="collection">the collection</param>
             <param name="action">action to perform on each item</param>
         </member>
-        <member name="T:Boxes.Integration.Setup.BoxesIntergrationSetup">
+        <member name="T:Boxes.Integration.BoxesWrapperBase`2">
             <summary>
-            
+            this wrapper of boxes.core, this will integrate the features of boxes with an IoC container
             </summary>
+            <typeparam name="TBuilder">the type used to build registrations</typeparam>
+            <typeparam name="TContainer">the type of the container, this will be used to resolve the instances</typeparam>
+            <remarks>
+            do not remove the TContainer this is used with the extension methods and with the other classes in the system</remarks>
         </member>
-        <member name="T:Boxes.Integration.Setup.IBoxesIntegrationSetup">
-            <summary>
-            Provides areas to alter/extend the process which 
-            <see cref="N:Boxes.Integration"/> adds on top of Boxes
-            </summary>
-        </member>
-        <member name="M:Boxes.Integration.Setup.IBoxesIntegrationSetup.AddPackgeLevelFilter(Boxes.Integration.Setup.IPackageTypesFilter,System.String[])">
-            <summary>
-            Add a package level pre filter
-            </summary>
-            <param name="typesFilterTypes">the filter</param>
-            <param name="packgeName">packages which </param>
-        </member>
-        <member name="M:Boxes.Integration.Setup.IBoxesIntegrationSetup.SetDefaultPackgeLevelFilter(Boxes.Integration.Setup.IPackageTypesFilter)">
-            <summary>
-            override the default package level filter
-            </summary>
-            <param name="typeTypesFilter">the filter</param>
-        </member>
-        <member name="M:Boxes.Integration.Setup.IBoxesIntegrationSetup.RegisterPreProcessTask(Boxes.Tasks.IBoxesTask{Boxes.Integration.ProcessPackageContext})">
-            <summary>
-            register a task which will run before the main process, use with caution
-            </summary>
-            <param name="task">the task to add</param>
-        </member>
-        <member name="M:Boxes.Integration.Setup.IBoxesIntegrationSetup.RegisterProcessTask(Boxes.Tasks.IBoxesTask{Boxes.Integration.ProcessPackageContext})">
-            <summary>
-            register a task in the main process, this will run in the order prescribed by the <see cref="T:Boxes.Integration.Process.IProcessOrder"/>
-            All the tasks in this process will run against a single package at a time
-            </summary>
-            <param name="task">task to add</param>
-        </member>
-        <member name="M:Boxes.Integration.Setup.IBoxesIntegrationSetup.SetProcessOrder(Boxes.Integration.Process.IProcessOrder)">
-            <summary>
-            override the how the packages will be sorted for the main processing.
-            </summary>
-            <param name="orderPackages">the process order</param>
-        </member>
-        <member name="M:Boxes.Integration.Setup.IBoxesIntegrationSetup.SetGlobalPackgeLevelFilter(Boxes.Integration.Setup.IPackageFilter)">
-            <summary>
-            set a global filter, this will always be run to filter the types.
-            </summary>
-            <param name="packageFilter">the package filter to use</param>
-        </member>
-        <member name="P:Boxes.Integration.Setup.BoxesSetup.IocRunner">
-            <summary>
-            register the types with an IoC container (the runner)
-            </summary>
-        </member>
-        <member name="P:Boxes.Integration.Setup.BoxesSetup.IocTask">
-            <summary>
-            register the types with an IoC container (the task)
-            </summary>
-        </member>
-        <member name="P:Boxes.Integration.Setup.BoxesSetup.ProcessOrder">
-            <summary>
-            define the order to process the packages
-            </summary>
-        </member>
-        <member name="P:Boxes.Integration.Setup.BoxesSetup.ExtensionRunner">
-            <summary>
-            find any extension points and run them
-            </summary>
-        </member>
-        <member name="T:Boxes.Integration.BoxesWrapperBase`1">
-            <summary>
-            Wrapper around Boxes, and extends it with an IoC container 
-            </summary>
-        </member>
-        <member name="T:Boxes.Integration.IBoxesWrapper">
+        <member name="T:Boxes.Integration.IBoxesWrapper`1">
             <summary>
             takes Boxes and extends it to provide lifestyle management with Dependency Injection along with the (isolated) module loading
             </summary>
+            <remarks>
+            the generic type is require to help the extension methods, do not get rid of it
+            </remarks>
         </member>
-        <member name="M:Boxes.Integration.IBoxesWrapper.Setup``1(Boxes.Discovering.IPackageScanner)">
+        <member name="M:Boxes.Integration.IBoxesWrapper`1.Setup``1(Boxes.Discovering.IPackageScanner)">
             <summary>
             Setup Boxes with the <see cref="T:Boxes.Loading.ILoader"/> and default <see cref="T:Boxes.Discovering.IPackageScanner"/> 
             </summary>
             <typeparam name="TLoader">the type of the loader to use with boxes</typeparam>
             <param name="defaultPackageScanner">the default scanner to use to find modules with</param>
         </member>
-        <member name="M:Boxes.Integration.IBoxesWrapper.DiscoverPackages(Boxes.Discovering.IPackageScanner)">
+        <member name="M:Boxes.Integration.IBoxesWrapper`1.DiscoverPackages(Boxes.Discovering.IPackageScanner)">
             <summary>
             Discover packages, using a supplied <see cref="T:Boxes.Discovering.IPackageScanner"/>
             </summary>
             <param name="packageScanner">package scanner to discovery packages with</param>
         </member>
-        <member name="M:Boxes.Integration.IBoxesWrapper.DiscoverPackages">
+        <member name="M:Boxes.Integration.IBoxesWrapper`1.DiscoverPackages">
             <summary>
             Discover packages, using the default <see cref="T:Boxes.Discovering.IPackageScanner"/>
             </summary>
         </member>
-        <member name="M:Boxes.Integration.IBoxesWrapper.LoadPackages">
+        <member name="M:Boxes.Integration.IBoxesWrapper`1.LoadPackages">
             <summary>
             Load packages ready for the application to use
             </summary>
         </member>
-        <member name="P:Boxes.Integration.IBoxesWrapper.PackageRegistry">
+        <member name="M:Boxes.Integration.IBoxesWrapper`1.GetService``1">
+            <summary>
+            get an internal service
+            </summary>
+            <typeparam name="T">The service to return</typeparam>
+            <returns>null if it it does not exist</returns>
+        </member>
+        <member name="P:Boxes.Integration.IBoxesWrapper`1.PackageRegistry">
             <summary>
             package registry, this will provide the information of what modules have been loaded
             </summary>
         </member>
-        <member name="P:Boxes.Integration.IBoxesWrapper.BoxesContainerSetup">
+        <member name="M:Boxes.Integration.BoxesWrapperBase`2.Initialize(Boxes.Integration.InternalIoc.IInternalContainer)">
             <summary>
-            A mechanism to handle type registration with the underlying IoC container.
+            setup boxes integration with the IoC implementation (register types with the internal IoC)
             </summary>
         </member>
-        <member name="P:Boxes.Integration.IBoxesWrapper.BoxesIntegrationSetup">
+        <member name="T:Boxes.Integration.BoxesWrapperExtensions">
             <summary>
-            A mechanism to modify/extend the <see cref="M:Boxes.Integration.IBoxesWrapper.LoadPackages"/> process 
+            extensions for the boxes wrapper
             </summary>
         </member>
-        <member name="P:Boxes.Integration.IBoxesWrapper.DependencyResolver">
+        <member name="M:Boxes.Integration.BoxesWrapperExtensions.TrustManager``1(Boxes.Integration.IBoxesWrapper{``0})">
             <summary>
-            The Dependency resolver
+            the trust manager being used by boxes.
             </summary>
-        </member>
-        <member name="F:Boxes.Integration.BoxesWrapperBase`1._processPipeline">
-            <summary>
-            the main process line, add tasks to this, and they will be executed
-            in the order defined by <see cref="T:Boxes.Integration.Process.IProcessOrder"/>
-            </summary>
-        </member>
-        <member name="F:Boxes.Integration.BoxesWrapperBase`1._preProcessPipeline">
-            <summary>
-            this is the pre-process pipeline, however its not recommended to use this one.
-            </summary>
-        </member>
-        <member name="M:Boxes.Integration.BoxesWrapperBase`1.Initalise(`0)">
-            <summary>
-            Dev notes in the remarks
-            </summary>
-            <remarks>
-            Register with the IoC and Set the following properties 
-                <see cref="P:Boxes.Integration.BoxesWrapperBase`1.DependencyResolver"/>, 
-                <see cref="P:Boxes.Integration.IBoxesWrapper.BoxesContainerSetup"/>, 
-            and <see cref="P:Boxes.Integration.IBoxesWrapper.PackageRegistry"/>  
-            </remarks>
-            <param name="container">the container which was passed to the ctor</param>
-        </member>
-        <member name="M:Boxes.Integration.BoxesWrapperBase`1.Setup``1(Boxes.Discovering.IPackageScanner)">
-            <summary>
-            Sets up the <see cref="T:Boxes.Discovering.IPackageScanner"/> and <see cref="T:Boxes.Loading.ILoader"/>
-            Dev notes in the remarks
-            </summary>
-            <remarks>
-            Register the <see cref="T:Boxes.Discovering.IPackageScanner"/> and <see cref="T:Boxes.Loading.ILoader"/>
-            </remarks>
-            <typeparam name="TLoader"></typeparam>
-            <param name="defaultPackageScanner"></param>
-        </member>
-        <member name="P:Boxes.Integration.BoxesWrapperBase`1.Container">
-            <summary>
-            access to the container (builder in the case of Autofac?)
-            </summary>
-        </member>
-        <member name="P:Boxes.Integration.BoxesWrapperBase`1.DependencyResolver">
-            <summary>
-            The Dependency resolver
-            </summary>
-        </member>
-        <member name="T:Boxes.Integration.Extensions.IBoxesExtension">
-            <summary>
-            Extend <see cref="N:Boxes.Integration"/>,
-            this runs before any other package is registered with the IoC, to allow room for extensions
-            </summary>
-        </member>
-        <member name="M:Boxes.Integration.Extensions.IBoxesExtension.Extend(Boxes.Integration.IBoxesWrapper)">
-            <summary>
-            extend the boxes through the boxes wrapper.
-            </summary>
-            <param name="boxesWrapper">the wrapper will give access to Boxes, IoC registrations and the Dependency Resolver</param>
         </member>
         <member name="T:Boxes.Integration.ExtensionManifest">
             <summary>
@@ -233,30 +611,6 @@
         <member name="P:Boxes.Integration.ExtensionManifest.Extensions">
             <summary>
             list of all the modules which extend Boxes functionality
-            </summary>
-        </member>
-        <member name="T:Boxes.Integration.Setup.IPackageTypesFilter">
-            <summary>
-            Filter types which are to be registered with the IoC
-            </summary>
-        </member>
-        <member name="M:Boxes.Integration.Setup.IPackageTypesFilter.FilterTypes(Boxes.Package)">
-            <summary>
-            filter out the types for a package
-            </summary>
-            <param name="package">the package to extract the types from</param>
-            <returns>a set of types which will be used for IoC registration</returns>
-        </member>
-        <member name="M:Boxes.Integration.Setup.IPackageFilter.FilterPackages(System.Collections.Generic.IEnumerable{Boxes.Package})">
-            <summary>
-            filter out the types for a package
-            </summary>
-            <param name="package">the package to extract the types from</param>
-            <returns>a set of types which will be used for IoC registration</returns>
-        </member>
-        <member name="T:Boxes.Integration.Tasks.BootupPackageTask">
-            <summary>
-            task to handle <see cref="T:Boxes.Integration.Extensions.IPackageBootup"/>
             </summary>
         </member>
         <member name="T:Boxes.Integration.ProcessPackageContext">
@@ -279,57 +633,6 @@
         <member name="P:Boxes.Integration.ProcessPackageContext.DependencyTypes">
             <summary>
             all the types of interest
-            </summary>
-        </member>
-        <member name="T:Boxes.Integration.ContainerSetup.IBoxesContainerSetup">
-            <summary>
-            setup how LifeStyles will be managed 
-            </summary>
-        </member>
-        <member name="M:Boxes.Integration.ContainerSetup.IBoxesContainerSetup.RegisterLifeStyle``2">
-            <summary>
-            Simple Dependency association with a LifeStyle manager of the IoC container
-            </summary>
-            <typeparam name="TLifeStyle">The lifestyle manager to use</typeparam>
-            <typeparam name="TInterface">The Dependency interface to register with the lifecycle</typeparam>
-        </member>
-        <member name="M:Boxes.Integration.ContainerSetup.IBoxesContainerSetup.RegisterLifeStyle(Boxes.Integration.ContainerSetup.Registration)">
-            <summary>
-            Advanced way to register a type (can be as simple as does it implement a Dependency or to apply a filter)
-            </summary>
-            <param name="registration">The registration with details on how setup the IoC with the types which match the where clause</param>
-        </member>
-        <member name="P:Boxes.Integration.ContainerSetup.IBoxesContainerSetup.Registrations">
-            <summary>
-            all the registration to run the types through
-            </summary>
-        </member>
-        <member name="T:Boxes.Integration.Extensions.IPackageBootup">
-            <summary>
-            this will load any logic to set the package in a state which it is ready to run. To use you must register <see cref="T:Boxes.Integration.Tasks.BootupPackageTask"/>
-            </summary>
-        </member>
-        <member name="M:Boxes.Integration.Extensions.IPackageBootup.Load(Boxes.Integration.IDependencyResolver)">
-            <summary>
-            initialise the package
-            </summary>
-            <param name="dependencyResolver"></param>
-        </member>
-        <member name="T:Boxes.Integration.Extensions.IPackageSetup">
-            <summary>
-            this will run only once, when the package is first installed.
-            the migrations logic should be run in this class too. To use you must register <see cref="T:Boxes.Integration.Tasks.SetupPackageTask"/>
-            </summary>
-        </member>
-        <member name="M:Boxes.Integration.Extensions.IPackageSetup.Setup(Boxes.Integration.IDependencyResolver)">
-            <summary>
-            sets up the module ready to be loaded, <see cref="T:Boxes.Integration.Extensions.IPackageBootup"/>
-            </summary>
-            <param name="dependencyResolver">the main container, allow you access to any registered objects</param>
-        </member>
-        <member name="P:Boxes.Integration.Extensions.IPackageSetup.HasAlreadyBeenSetup">
-            <summary>
-            determines if the Setup method should run
             </summary>
         </member>
         <member name="T:Boxes.Integration.IDependencyResolver">
@@ -373,7 +676,7 @@
         </member>
         <member name="T:Boxes.Integration.LoaderProxy">
             <summary>
-            Loader proxy allows a thrid party class to see which new packages have
+            Loader proxy allows a third party class to see which new packages have
             been loaded
             </summary>
         </member>
@@ -393,34 +696,64 @@
             any new loaded packages
             </summary>
         </member>
-        <member name="T:Boxes.Integration.ContainerSetup.RegisterWith">
+        <member name="T:Boxes.Integration.Setup.Registrations.Contracts">
             <summary>
-            Register with which services
+            Register with which service contracts
             </summary>
         </member>
-        <member name="F:Boxes.Integration.ContainerSetup.RegisterWith.AllInterfaces">
+        <member name="F:Boxes.Integration.Setup.Registrations.Contracts.AllInterfaces">
             <summary>
             All the interfaces
             </summary>
         </member>
-        <member name="F:Boxes.Integration.ContainerSetup.RegisterWith.FirstInterface">
+        <member name="F:Boxes.Integration.Setup.Registrations.Contracts.FirstInterface">
             <summary>
             Only the first interface
             </summary>
         </member>
-        <member name="F:Boxes.Integration.ContainerSetup.RegisterWith.SelfOnly">
+        <member name="F:Boxes.Integration.Setup.Registrations.Contracts.SelfOnly">
             <summary>
             With only the class itself
             </summary>
         </member>
-        <member name="F:Boxes.Integration.ContainerSetup.RegisterWith.SelfAndAllInterfaces">
+        <member name="F:Boxes.Integration.Setup.Registrations.Contracts.SelfAndAllInterfaces">
             <summary>
             With only the class itself
             </summary>
         </member>
-        <member name="T:Boxes.Integration.Tasks.SetupPackageTask">
+        <member name="T:Boxes.Integration.Setup.Registrations.Registration">
             <summary>
-            task to handle <see cref="T:Boxes.Integration.Extensions.IPackageSetup"/>
+            This class provides a mechanism to setup the registration of types with the underlying IoC.
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.RegistrationMeta">
+            <summary>
+            stores information about the registration, this will be used to create a boxes task
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.RegistrationMeta.Where">
+            <summary>
+            filter to apply
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.RegistrationMeta.With">
+            <summary>
+            what to register it as
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.RegistrationMeta.FactoryMethod">
+            <summary>
+            use custom ctor
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.RegistrationMeta.LifeStyle">
+            <summary>
+            the scope of the types which this registration is for
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.RegistrationMeta.Configurations">
+            <summary>
+            a list of configurations to apply
             </summary>
         </member>
         <member name="T:Boxes.Integration.Tasks.TypeScannerTask">
@@ -452,6 +785,104 @@
             <summary>
             dependencies of this node
             </summary>
+        </member>
+        <member name="T:Boxes.Integration.Trust.Filters.FuncContractFilter`1">
+            <summary>
+            apply the trust of a type given its package context
+            </summary>
+            <typeparam name="TContract"></typeparam>
+        </member>
+        <member name="T:Boxes.Integration.Trust.Filters.ContractFilter`1">
+            <summary>
+            filter a contract and include its package as context, inherit this to provide the IsTrustedContext method
+            </summary>
+            <typeparam name="TContract">contract</typeparam>
+        </member>
+        <member name="T:Boxes.Integration.Trust.Filters.TrustFilterBase`1">
+            <summary>
+            A base trust filter, this adds a basic handle to match the <see cref="T:Boxes.Integration.Trust.Contexts.TrustContext"/>
+            </summary>
+            <typeparam name="TContext">the <see cref="T:Boxes.Integration.Trust.Contexts.TrustContext"/> this filter will be filter against</typeparam>
+        </member>
+        <member name="T:Boxes.Integration.Trust.Filters.ITrustFilter">
+            <summary>
+            A trust filter will see if the context is legit and there is no bad intention happening
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Trust.Filters.ITrustFilter.CanHandle(Boxes.Integration.Trust.Contexts.TrustContext)">
+            <summary>
+            to see if this filter can be applied to the current trust context
+            </summary>
+            <param name="trustContext">the trust context</param>
+            <returns></returns>
+        </member>
+        <member name="M:Boxes.Integration.Trust.Filters.ITrustFilter.IsTrusted(Boxes.Integration.Trust.Contexts.TrustContext)">
+            <summary>
+            returns if the context can be trusted
+            </summary>
+            <param name="trustContext">the trust context</param>
+            <returns>true if the context can be trusted</returns>
+        </member>
+        <member name="P:Boxes.Integration.Trust.Filters.ITrustFilter.HandlesTrustContextType">
+            <summary>
+            returns the main trust context this filter supports (this is to try and make the process a little faster)
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Trust.ITrustManager">
+            <summary>
+            a trust manager is responsible for validating components to see if they are to be trusted
+            some things which the application may be interested in is if a dll has been tampered with
+            or if a class type is being exposed from a known dll or a dll which has a certain public key
+            </summary>
+            <remarks>
+            This works on a optimistic way, it looks for a black listing, not a white one.
+            </remarks>
+        </member>
+        <member name="M:Boxes.Integration.Trust.ITrustManager.IsTrusted(Boxes.Integration.Trust.Contexts.TrustContext)">
+            <summary>
+            this will detail if a class/dll etc is trusted
+            </summary>
+            <param name="context">the current context to investigate</param>
+            <returns>return true if the context can be trusted</returns>
+        </member>
+        <member name="M:Boxes.Integration.Trust.ITrustManager.AddTrust(Boxes.Integration.Trust.Filters.ITrustFilter)">
+            <summary>
+            add a trust filter for the manager to use
+            </summary>
+            <param name="trust">the filer to be applied</param>
+        </member>
+        <member name="T:Boxes.Integration.Trust.Contexts.BoxesExtensions.TypeFromPackageTrustContext">
+            <summary>
+            check to see if a type from a package is ok (Boxes Extension)
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Trust.Contexts.BoxesExtensions.TypeFromPackageTrustContext.Contract">
+            <summary>
+            the contract to be added
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Trust.Contexts.BoxesExtensions.TypeFromPackageTrustContext.Service">
+            <summary>
+            the service which will fulfil the contract
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Trust.Contexts.BoxesExtensions.TypeFromPackageTrustContext.Package">
+            <summary>
+            the package where the service was located
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Trust.TrustManager">
+            <summary>
+            Default trust manager
+            </summary>
+            <remarks>
+            this class is sealed, to try and provide some security (ie proxy-ing it)
+            
+            Also this works on a optimistic way, it looks for a black listing, not a white one.
+            
+            you may also note the <see cref="T:Boxes.Integration.Extensions.IBoxesExtensionWithSetup"/> interface, this is to allow people configure
+            extra filters in modules, to ensure no once replace this with another hacked instance, just add a filter to prevent it.
+            </remarks>
         </member>
     </members>
 </doc>
