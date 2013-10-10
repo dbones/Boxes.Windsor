@@ -3,7 +3,7 @@ namespace Boxes.Windsor
     using Castle.Windsor;
     using Integration.Factories;
 
-    internal class IocFactory : IIocFactory<IWindsorContainer,IWindsorContainer>
+    internal class IocFactory : IIocFactory<IWindsorContainer, IWindsorContainer>
     {
         private readonly IIocSetup<IWindsorContainer> _setup;
 

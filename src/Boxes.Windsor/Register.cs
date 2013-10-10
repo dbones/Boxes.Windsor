@@ -7,5 +7,5 @@ namespace Boxes.Windsor
     /// <summary>
     /// register and configure types with the underlying IoC container using this pattern
     /// </summary>
-    public class Register : RegisterBase<Type, IRegistration>{}
+    public class Register : RegisterBase<Type, ComponentRegistration> { }
 }
