@@ -1,3 +1,7 @@
+0.3.x
+==============
+updated to support the 0.3.x changes made in integration
+
 0.2.x
 ==============
 updated to support 0.2 versions of Core and Integration projects
