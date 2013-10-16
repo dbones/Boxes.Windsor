@@ -106,11 +106,82 @@
             <param name="package">the package to extract the types from</param>
             <returns>a set of types which will be used for IoC registration</returns>
         </member>
+        <member name="T:Boxes.Integration.Setup.IInterceptionSelector">
+            <summary>
+            the selector will indicate what interceptors to apply on a given registration
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IInterceptionSelector.InterceptorsToApply(Boxes.Integration.Setup.Interception.InterceptionContext)">
+            <summary>
+            find the interceptor types to apply on a registration
+            </summary>
+            <param name="ctx">contains all the inforamtion required to see which interceptor types will be returned</param>
+            <returns>a distinct list of interceptor types</returns>
+        </member>
+        <member name="T:Boxes.Integration.Setup.Interception.InterceptionContext">
+            <summary>
+            contains information about an interception context
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.Interception.InterceptionContext.Contracts">
+            <summary>
+            the contracts which we have registered the service with
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.Interception.InterceptionContext.Service">
+            <summary>
+            the concrete service which will satisfy the contract
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.Interception.InterceptorMeta">
+            <summary>
+            contains information on when and where to apply an Aspect
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.Interception.InterceptorMeta.Where">
+            <summary>
+            when to apply this interceptor
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.Interception.InterceptorMeta.Interceptor">
+            <summary>
+            the interceptor to apply
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.Interception.IRegisterInterception">
+            <summary>
+            register an interceptor/aspect for AOP
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Setup.Interception.IRegisterInterception.Where(System.Predicate{Boxes.Integration.Setup.Interception.InterceptionContext})">
+            <summary>
+            apply a filter (pattern) to find which types this registration will apply too
+            </summary>
+            <param name="where">the pattern to find the types this registration applies too</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.Interception.IRegisterInterception.Apply(System.Type[])">
+            <summary>
+            the interceptors to apply
+            </summary>
+            <param name="interceptor">interceptors to apply</param>
+        </member>
+        <member name="M:Boxes.Integration.Setup.Interception.IRegisterInterception.Apply``1">
+            <summary>
+            the interceptor apply
+            </summary>
+            <typeparam name="T">the interceptor to apply</typeparam>
+        </member>
         <member name="T:Boxes.Integration.Setup.IRegistrationTaskMapper`1">
             <summary>
             this provides a mechanism to create the required boxes tasks for registration
             </summary>
             <typeparam name="TBuilder">the IoC builder</typeparam>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IRegistrationTaskMapper`1.SetInterceptionSelector(Boxes.Integration.Setup.IInterceptionSelector)">
+            <summary>
+            set the interceptor selector which can be used with the registration task
+            </summary>
+            <param name="interceptionSelector">the registration selector</param>
         </member>
         <member name="M:Boxes.Integration.Setup.IRegistrationTaskMapper`1.CreateRegisterTask(Boxes.Integration.Setup.RegistrationMeta)">
             <summary>
@@ -120,7 +191,7 @@
         </member>
         <member name="T:Boxes.Integration.Setup.IDefaultContainerSetup`1">
             <summary>
-            the tenants container setup
+            default container setup
             </summary>
             <typeparam name="TBuilder">the ioc builder class</typeparam>
         </member>
@@ -133,6 +204,12 @@
             <summary>
             the setup for this area of the application
             </summary>
+        </member>
+        <member name="M:Boxes.Integration.Setup.IContainerSetup.AddInterception(Boxes.Integration.Setup.Interception.IRegisterInterception)">
+            <summary>
+            add an interceptor/aspect to the container
+            </summary>
+            <param name="registerInterception">the registration</param>
         </member>
         <member name="M:Boxes.Integration.Setup.IContainerSetup.AddRegistration(Boxes.Integration.Setup.Registrations.IRegister)">
             <summary>
@@ -362,7 +439,7 @@
             note this is abstract, it is inherited by the container implementation, 
             this was to make the API easier to work with 
             IE new Register() VS new Register[Type, WindsorContainer]() 
-            the latter is not do friendly
+            the latter is not friendly to do
             </remarks>
         </member>
         <member name="T:Boxes.Integration.Setup.Registrations.RegisterContext`1">
@@ -640,6 +717,42 @@
             <summary>
             all the types of interest
             </summary>
+        </member>
+        <member name="T:Boxes.Integration.Tasks.PipelineExecutorWrapper`1">
+            <summary>
+            wrappers arround a single pipeline, and offers a simple
+            way to update the tasks the pipeline will carry out.
+            </summary>
+            <typeparam name="T">the type which the tasks in the pipeline are</typeparam>
+        </member>
+        <member name="M:Boxes.Integration.Tasks.PipelineExecutorWrapper`1.#ctor">
+            <summary>
+            create wrapper with no tasks
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Tasks.PipelineExecutorWrapper`1.#ctor(System.Collections.Generic.IEnumerable{Boxes.Tasks.IBoxesTask{`0}})">
+            <summary>
+            create wrapper, and add a number of tasks ready for the pipeline
+            </summary>
+            <param name="tasks">the tasks for the underlying pipeline</param>
+        </member>
+        <member name="M:Boxes.Integration.Tasks.PipelineExecutorWrapper`1.UpdateTasksAsRequired(System.Collections.Generic.IEnumerable{Boxes.Tasks.IBoxesTask{`0}})">
+            <summary>
+            update the tasks in the pipeline
+            </summary>
+            <param name="tasks">sets the tasks for the pipeline</param>
+        </member>
+        <member name="M:Boxes.Integration.Tasks.PipelineExecutorWrapper`1.UpdateTasksAsRequired">
+            <summary>
+            update the tasks in the pipeline
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.Tasks.PipelineExecutorWrapper`1.Execute(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            execute the pipeline
+            </summary>
+            <param name="item">items to process</param>
+            <returns>the collection of items which was passed in</returns>
         </member>
         <member name="T:Boxes.Integration.IDependencyResolver">
             <summary>

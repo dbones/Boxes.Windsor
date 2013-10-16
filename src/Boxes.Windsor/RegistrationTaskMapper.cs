@@ -19,9 +19,16 @@ namespace Boxes.Windsor
 
     internal class RegistrationTaskMapper : IRegistrationTaskMapper<IWindsorContainer>
     {
+        private IInterceptionSelector _interceptionSelector;
+
+        public void SetInterceptionSelector(IInterceptionSelector interceptionSelector)
+        {
+            _interceptionSelector = interceptionSelector;
+        }
+
         public IBoxesTask<RegistrationContext<IWindsorContainer>> CreateRegisterTask(RegistrationMeta registration)
         {
-            return new RegistrationTask(registration);
+            return new RegistrationTask(registration, _interceptionSelector);
         }
     }
 }

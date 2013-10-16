@@ -14,20 +14,24 @@
 namespace Boxes.Windsor
 {
     using System;
+    using System.Linq;
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
     using Integration.Setup;
+    using Integration.Setup.Interception;
     using Tasks;
 
     internal class RegistrationTask : IBoxesTask<RegistrationContext<IWindsorContainer>>
     {
         private readonly RegistrationMeta _registration;
+        private readonly IInterceptionSelector _interceptionSelector;
 
-        public RegistrationTask( RegistrationMeta registration)
+        public RegistrationTask(RegistrationMeta registration, IInterceptionSelector interceptionSelector)
         {
             _registration = registration;
+            _interceptionSelector = interceptionSelector;
         }
-        
+
         public bool CanHandle(RegistrationContext<IWindsorContainer> item)
         {
             return _registration.Where(item.Type);
@@ -36,13 +40,16 @@ namespace Boxes.Windsor
         public void Execute(RegistrationContext<IWindsorContainer> item)
         {
             var typeToRegister = item.Type;
-            var interfaces = _registration.With(typeToRegister);
+            var interfaces = _registration.With(typeToRegister).ToList();
             var reg = Component.For(interfaces).ImplementedBy(typeToRegister).LifestyleCustom((Type)_registration.LifeStyle);
 
             if (_registration.FactoryMethod != null)
             {
                 reg.UsingFactoryMethod(kernal => _registration.FactoryMethod);
             }
+
+            var interceptorContext = new InterceptionContext() { Contracts = interfaces, Service = typeToRegister };
+            reg.Interceptors(_interceptionSelector.InterceptorsToApply(interceptorContext).ToArray());
 
             foreach (var configuraition in _registration.Configurations)
             {
