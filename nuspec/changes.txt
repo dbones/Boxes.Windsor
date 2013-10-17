@@ -1,3 +1,7 @@
+0.4.x
+==============
+AOP support
+
 0.3.x
 ==============
 updated to support the 0.3.x changes made in integration
