@@ -8,3 +8,6 @@ Issue tracker: 		- https://github.com/boxes-project/Windsor/issues
 StackOverflow tags:	- boxes
 
 Any help with the documentation, providing examples would be epic.
+
+
+Upgrading from 0.2.x - please checkout the documentation.
