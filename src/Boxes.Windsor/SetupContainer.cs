@@ -15,15 +15,15 @@ namespace Boxes.Windsor
             return true;
         }
 
-        /// <summary>
+                /// <summary>
         /// create a new regiser pattern
         /// </summary>
-        public Register Register { get {return new Register();}}
+        public Register Component { get {return new Register();}}
 
         /// <summary>
         /// create a new interception (AOP) pattern
         /// </summary>
-        public IRegisterInterception RegisterInterception { get { return new RegisterInterception(); } }
+        public IRegisterInterception Intercept { get { return new RegisterInterception(); } }
 
         public abstract void Configure(IDefaultContainerSetup<IWindsorContainer> extension);
     }

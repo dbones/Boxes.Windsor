@@ -331,12 +331,12 @@
             setup any container container (this will not be able to access any container special-isms)
             </summary>
         </member>
-        <member name="P:Boxes.Integration.Setup.SetupGenericContainer.Register">
+        <member name="P:Boxes.Integration.Setup.SetupGenericContainer.Component">
             <summary>
             create a new registration pattern
             </summary>
         </member>
-        <member name="P:Boxes.Integration.Setup.SetupGenericContainer.RegisterInterception">
+        <member name="P:Boxes.Integration.Setup.SetupGenericContainer.Intercept">
             <summary>
             create a new interception (AOP) pattern
             </summary>
