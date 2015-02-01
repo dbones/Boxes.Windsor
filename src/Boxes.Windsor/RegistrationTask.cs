@@ -19,17 +19,20 @@ namespace Boxes.Windsor
     using Castle.Windsor;
     using Integration.Setup;
     using Integration.Setup.Interception;
+    using Integration.Setup.Registrations;
     using Tasks;
 
     internal class RegistrationTask : IBoxesTask<RegistrationContext<IWindsorContainer>>
     {
         private readonly RegistrationMeta _registration;
         private readonly IInterceptionSelector _interceptionSelector;
+        private readonly MapLifeStleToWindsor _mapLifeStleToWindsor;
 
-        public RegistrationTask(RegistrationMeta registration, IInterceptionSelector interceptionSelector)
+        public RegistrationTask(RegistrationMeta registration, IInterceptionSelector interceptionSelector, MapLifeStleToWindsor mapLifeStleToWindsor)
         {
             _registration = registration;
             _interceptionSelector = interceptionSelector;
+            _mapLifeStleToWindsor = mapLifeStleToWindsor;
         }
 
         public bool CanHandle(RegistrationContext<IWindsorContainer> item)
@@ -41,7 +44,16 @@ namespace Boxes.Windsor
         {
             var typeToRegister = item.Type;
             var interfaces = _registration.With(typeToRegister).ToList();
-            var reg = Component.For(interfaces).ImplementedBy(typeToRegister).LifestyleCustom((Type)_registration.LifeStyle);
+            var reg = Component.For(interfaces).ImplementedBy(typeToRegister);
+            
+            
+            var lifeStyle = (Type) _registration.LifeStyle;
+            if (typeof(LifeStyle).IsAssignableFrom(lifeStyle))
+            {
+                lifeStyle = _mapLifeStleToWindsor.GetLifeStyle(lifeStyle);
+            }
+            reg.LifestyleCustom(lifeStyle);    
+
 
             if (_registration.FactoryMethod != null)
             {

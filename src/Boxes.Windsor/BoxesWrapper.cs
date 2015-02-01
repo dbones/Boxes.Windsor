@@ -13,6 +13,8 @@
 // limitations under the License.
 namespace Boxes.Windsor
 {
+    using System.Collections.Concurrent;
+    using Castle.MicroKernel.Lifestyle;
     using Castle.Windsor;
     using Integration;
     using Integration.Factories;
@@ -25,8 +27,9 @@ namespace Boxes.Windsor
         protected override void Initialize(IInternalContainer internalContainer)
         {
             internalContainer.Add(typeof(IIocFactory<,>), typeof(IocFactory)); //hmmm, do not like that much
-            internalContainer.Add(typeof(IDependencyResolverFactory), typeof(DependencyResolverFactory));
             internalContainer.Add(typeof(IRegistrationTaskMapper<>), typeof(RegistrationTaskMapper));
+            internalContainer.Add<IDependencyResolverFactory, DependencyResolverFactory>();
+            internalContainer.Add<MapLifeStleToWindsor, MapLifeStleToWindsor>();
         }
     }
 }

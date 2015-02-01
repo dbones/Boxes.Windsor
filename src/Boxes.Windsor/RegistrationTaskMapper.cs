@@ -19,7 +19,13 @@ namespace Boxes.Windsor
 
     internal class RegistrationTaskMapper : IRegistrationTaskMapper<IWindsorContainer>
     {
+        private readonly MapLifeStleToWindsor _mapLifeStleToWindsor;
         private IInterceptionSelector _interceptionSelector;
+
+        public RegistrationTaskMapper(MapLifeStleToWindsor mapLifeStleToWindsor)
+        {
+            _mapLifeStleToWindsor = mapLifeStleToWindsor;
+        }
 
         public void SetInterceptionSelector(IInterceptionSelector interceptionSelector)
         {
@@ -28,7 +34,7 @@ namespace Boxes.Windsor
 
         public IBoxesTask<RegistrationContext<IWindsorContainer>> CreateRegisterTask(RegistrationMeta registration)
         {
-            return new RegistrationTask(registration, _interceptionSelector);
+            return new RegistrationTask(registration, _interceptionSelector, _mapLifeStleToWindsor);
         }
     }
 }
