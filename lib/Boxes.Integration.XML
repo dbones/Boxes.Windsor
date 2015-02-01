@@ -4,6 +4,39 @@
         <name>Boxes.Integration</name>
     </assembly>
     <members>
+        <member name="T:Boxes.Integration.BoxesWrapperExtensions">
+            <summary>
+            extensions for the boxes wrapper
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.BoxesWrapperExtensions.TrustManager``2(Boxes.Integration.IBoxesWrapper{``0,``1})">
+            <summary>
+            the trust manager being used by boxes.
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.BoxesWrapperExtensions.UseIsolatedSetup``2(Boxes.Integration.IBoxesWrapper{``0,``1},System.String)">
+            <summary>
+            Setup the package scanner, loader to work with Boxes.Integration, and treats the
+            internal dependencies of packages in isolated mode
+            </summary>
+            <param name="boxes">the boxes wrapper</param>
+            <param name="packagesDirectory">location of the packages folder</param>
+        </member>
+        <member name="M:Boxes.Integration.BoxesWrapperExtensions.UseDefaultSetup``2(Boxes.Integration.IBoxesWrapper{``0,``1},System.String)">
+            <summary>
+            Setup the package scanner, loader to work with Boxes.Integration, and treats the
+            internal dependencies of packages in default mode
+            </summary>
+            <param name="boxes">the boxes wrapper</param>
+            <param name="packagesDirectory">location of the packages folder</param>
+        </member>
+        <member name="M:Boxes.Integration.BoxesWrapperExtensions.SetupCore``3(Boxes.Integration.IBoxesWrapper{``0,``1},System.String)">
+            <summary>
+            Setup the package scanner, loader to work with Boxes.Integration
+            </summary>
+            <param name="boxes">the boxes wrapper</param>
+            <param name="packagesDirectory">location of the packages folder</param>
+        </member>
         <member name="T:Boxes.Integration.Extensions.ISetupBoxesExtension`1">
             <summary>
             this is the class which will setup a <see cref="T:Boxes.Integration.Extensions.IBoxesExtensionWithSetup"/>
@@ -278,6 +311,49 @@
             the context
             </summary>
         </member>
+        <member name="T:Boxes.Integration.Setup.Registrations.LifeStyle">
+            <summary>
+            The scope to apply to an instace of a type.
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.Registrations.IRegister">
+            <summary>
+            This class provides a mechanism to setup the registration of types with the underlying IoC.
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.Registrations.IRegister.RegistrationMeta">
+            <summary>
+            meta information about the registration
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.Setup.SetupGenericContainer">
+            <summary>
+            setup any container container (this will not be able to access any container special-isms)
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.SetupGenericContainer.Register">
+            <summary>
+            create a new registration pattern
+            </summary>
+        </member>
+        <member name="P:Boxes.Integration.Setup.SetupGenericContainer.RegisterInterception">
+            <summary>
+            create a new interception (AOP) pattern
+            </summary>
+        </member>
+        <member name="T:Boxes.Integration.StringExtension">
+            <summary>
+            couple of string extensions
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.StringExtension.FormatWith(System.String,System.Object[])">
+            <summary>
+            format the string, "{0} world".FormatWith("Hello");
+            </summary>
+            <param name="str"></param>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
         <member name="T:Boxes.Integration.Trust.Contexts.BoxesExtensions.AssemblyFromPackageTrustContext">
             <summary>
             check to see if an assembly/module from a package is ok (Boxes Extension)
@@ -351,29 +427,6 @@
             Gets all the interfaces this type implements, it also adds the type of interest to the result set
             </summary>
             <param name="type">the type of interest</param>
-        </member>
-        <member name="T:Boxes.Integration.StringExtension">
-            <summary>
-            couple of string extensions
-            </summary>
-        </member>
-        <member name="M:Boxes.Integration.StringExtension.FormatWith(System.String,System.Object[])">
-            <summary>
-            format the string, "{0} world".FormatWith("Hello");
-            </summary>
-            <param name="str"></param>
-            <param name="args"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Boxes.Integration.Setup.Registrations.IRegister">
-            <summary>
-            This class provides a mechanism to setup the registration of types with the underlying IoC.
-            </summary>
-        </member>
-        <member name="P:Boxes.Integration.Setup.Registrations.IRegister.RegistrationMeta">
-            <summary>
-            meta information about the registration
-            </summary>
         </member>
         <member name="T:Boxes.Integration.Setup.Registrations.IRegister`2">
             <summary>
@@ -674,16 +727,6 @@
         <member name="M:Boxes.Integration.BoxesWrapperBase`2.Initialize(Boxes.Integration.InternalIoc.IInternalContainer)">
             <summary>
             setup boxes integration with the IoC implementation (register types with the internal IoC)
-            </summary>
-        </member>
-        <member name="T:Boxes.Integration.BoxesWrapperExtensions">
-            <summary>
-            extensions for the boxes wrapper
-            </summary>
-        </member>
-        <member name="M:Boxes.Integration.BoxesWrapperExtensions.TrustManager``2(Boxes.Integration.IBoxesWrapper{``0,``1})">
-            <summary>
-            the trust manager being used by boxes.
             </summary>
         </member>
         <member name="T:Boxes.Integration.ExtensionManifest">
