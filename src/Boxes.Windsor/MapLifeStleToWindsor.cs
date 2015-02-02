@@ -9,7 +9,7 @@ namespace Boxes.Windsor
 
     public class MapLifeStleToWindsor : IBoxesExtensionWithSetup
     {
-        private readonly IDictionary<Type, Type> mappers = new Dictionary<Type, Type>();
+        private readonly IDictionary<Type, Type> _mappers = new Dictionary<Type, Type>();
 
         public MapLifeStleToWindsor()
         {
@@ -23,12 +23,12 @@ namespace Boxes.Windsor
             where TSrc : LifeStyle
             where TDest : ILifestyleManager
         {
-            mappers.Add(typeof(TSrc), typeof(TDest));
+            _mappers.Add(typeof(TSrc), typeof(TDest));
         }
 
         internal Type GetLifeStyle(Type lifeStyle)
         {
-            return mappers[lifeStyle];
+            return _mappers[lifeStyle];
         }
 
     }

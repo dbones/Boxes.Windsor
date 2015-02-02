@@ -9,7 +9,7 @@
             extensions for the boxes wrapper
             </summary>
         </member>
-        <member name="M:Boxes.Integration.BoxesWrapperExtensions.TrustManager``2(Boxes.Integration.IBoxesWrapper{``0,``1})">
+        <member name="M:Boxes.Integration.BoxesWrapperExtensions.TrustManager(Boxes.Integration.IBoxesWrapper)">
             <summary>
             the trust manager being used by boxes.
             </summary>
@@ -686,40 +686,45 @@
             takes Boxes and extends it to provide lifestyle management with Dependency Injection along with the (isolated) module loading
             </summary>
             <remarks>
-            the generic type is require to help the extension methods, do not get rid of it
+            the generic type is required to help the extension methods, do not get rid of it
             </remarks>
         </member>
-        <member name="M:Boxes.Integration.IBoxesWrapper`2.Setup``1(Boxes.Discovering.IPackageScanner)">
+        <member name="T:Boxes.Integration.IBoxesWrapper">
+            <summary>
+            takes Boxes and extends it to provide lifestyle management with Dependency Injection along with the (isolated) module loading
+            </summary>
+        </member>
+        <member name="M:Boxes.Integration.IBoxesWrapper.Setup``1(Boxes.Discovering.IPackageScanner)">
             <summary>
             Setup Boxes with the <see cref="T:Boxes.Loading.ILoader"/> and default <see cref="T:Boxes.Discovering.IPackageScanner"/> 
             </summary>
             <typeparam name="TLoader">the type of the loader to use with boxes</typeparam>
             <param name="defaultPackageScanner">the default scanner to use to find modules with</param>
         </member>
-        <member name="M:Boxes.Integration.IBoxesWrapper`2.DiscoverPackages(Boxes.Discovering.IPackageScanner)">
+        <member name="M:Boxes.Integration.IBoxesWrapper.DiscoverPackages(Boxes.Discovering.IPackageScanner)">
             <summary>
             Discover packages, using a supplied <see cref="T:Boxes.Discovering.IPackageScanner"/>
             </summary>
             <param name="packageScanner">package scanner to discovery packages with</param>
         </member>
-        <member name="M:Boxes.Integration.IBoxesWrapper`2.DiscoverPackages">
+        <member name="M:Boxes.Integration.IBoxesWrapper.DiscoverPackages">
             <summary>
             Discover packages, using the default <see cref="T:Boxes.Discovering.IPackageScanner"/>
             </summary>
         </member>
-        <member name="M:Boxes.Integration.IBoxesWrapper`2.LoadPackages">
+        <member name="M:Boxes.Integration.IBoxesWrapper.LoadPackages">
             <summary>
             Load packages ready for the application to use
             </summary>
         </member>
-        <member name="M:Boxes.Integration.IBoxesWrapper`2.GetService``1">
+        <member name="M:Boxes.Integration.IBoxesWrapper.GetService``1">
             <summary>
             get an internal service
             </summary>
             <typeparam name="T">The service to return</typeparam>
             <returns>null if it it does not exist</returns>
         </member>
-        <member name="P:Boxes.Integration.IBoxesWrapper`2.PackageRegistry">
+        <member name="P:Boxes.Integration.IBoxesWrapper.PackageRegistry">
             <summary>
             package registry, this will provide the information of what modules have been loaded
             </summary>

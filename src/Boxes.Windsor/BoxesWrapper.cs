@@ -13,14 +13,11 @@
 // limitations under the License.
 namespace Boxes.Windsor
 {
-    using System.Collections.Concurrent;
-    using Castle.MicroKernel.Lifestyle;
     using Castle.Windsor;
     using Integration;
     using Integration.Factories;
     using Integration.InternalIoc;
     using Integration.Setup;
-
 
     public class BoxesWrapper: BoxesWrapperBase<IWindsorContainer, IWindsorContainer>
     {
