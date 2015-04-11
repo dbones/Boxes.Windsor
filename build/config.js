@@ -5,7 +5,7 @@ var config = {
 
     outputDir : path.resolve('./output'),
     toolsDir : path.resolve('./tools'),
-    buildVersion : args.buildNumber ? '0.4.' + args.buildNumber  : undefined,
+    buildVersion : args.buildNumber ? '0.4.' + args.buildNumber  : '0.0.0',
     company: 'dbones.co.uk'
 
 

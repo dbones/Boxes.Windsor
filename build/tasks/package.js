@@ -1,36 +1,38 @@
 var gulp = require('gulp');
 var request = require('request');
-var fs = require('fs');
 var mkdirp = require('mkdirp');
 var Nuget = require('nuget-runner');
 var glob = require("glob");
 var Promise = require('es6-promise').Promise;
 var path = require('path');
-var args = require('yargs').argv;
 var config = require('../config');
-var xmlpoke = require('xmlpoke');
 
-var downloadLocation= 'http://nuget.org/nuget.exe';
 var outputDir = config.outputDir;
 var toolsDir = config.toolsDir;
 var nugetDir = toolsDir + '/nuget';
 var runnerFileName =  nugetDir + '/nuget.exe';
 
-gulp.task('package', ['get-nuget', 'nuegt-set-dependency-version'], function(done) {
 
-	var defaultSettings = {
-		nugetPath:  runnerFileName ,
-		verbosity: 'detailed'
-	};
+var defaultSettings = {
+    nugetPath:  runnerFileName ,
+    verbosity: 'detailed'
+};
 
-    if(config.command.package.configFile != null) {
-        // The NuGet configuation file. If not specified, file
-        // %AppData%\NuGet\NuGet.config is used as configuration file.
-        //configFile: 'path/to/nuget.config'
-        defaultSettings.configFile = config.command.package;
-    }
+if(config.command.package.configFile != null) {
+    // The NuGet configuation file. If not specified, file
+    // %AppData%\NuGet\NuGet.config is used as configuration file.
+    //configFile: 'path/to/nuget.config'
+    defaultSettings.configFile = config.command.package;
+}
 
-    var nuget = Nuget(defaultSettings);
+var nuget = Nuget(defaultSettings);
+
+
+
+
+gulp.task('package', ['get-nuget'], function(done) {
+
+    mkdirp.sync(outputDir);
 
 	glob('./**/*.nuspec', function (er, files) {
 		var promise = new Promise(function(resolve) { resolve(); });
@@ -41,7 +43,7 @@ gulp.task('package', ['get-nuget', 'nuegt-set-dependency-version'], function(don
 
                 var nextPromise = new Promise(function(resolve, reject) {
 
-                    console.log(nuget);
+                    //TODO: custom packages repo
                     var arg = {
                         spec: path.resolve(file),
                         outputDirectory: outputDir,
@@ -73,41 +75,54 @@ gulp.task('package', ['get-nuget', 'nuegt-set-dependency-version'], function(don
 
 });
 
+gulp.task('restore-dependencies', ['get-nuget'], function(done) {
 
-gulp.task('nuegt-set-dependency-version', function(done){
-    //xmlpoke
+    mkdirp.sync(outputDir);
 
-    if(config.buildVersion == null
-        || config.command.package == null
-        || config.command.package.dependencyNameOverride == null
-        || config.command.package.dependencyNameOverride == '') {
-        done();
-        return;
-    }
+    //there should only be one for the solution
+    glob('./**/*.sln', function (er, files) {
+        var promise = new Promise(function(resolve) { resolve(); });
+        files.forEach(function(file) {
+            //if(file.indexOf("packages") > -1 && file.indexOf("packages.config") == -1) return;
 
-    xmlpoke('./**/*.nuspec', function(xml) {
-        xml
-            .addNamespace('x', 'http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd')
-            .set(config.command.package.dependencyNameOverride, config.buildVersion);
+            var run = function(){
+
+                var nextPromise = new Promise(function(resolve, reject) {
+
+                    var arg = {
+
+                        // Specify the solution path or path to a packages.config file.
+                        packages: path.resolve(file),
+
+                        // A list of packages sources to use for the install.
+                        // Can either be a path, url or config value.
+                        //source: ['http://mynugetserver.org', 'path/to/source', 'ConfigValue'],
+
+                        noCache: true,
+                        requireConsent: false,
+                        disableParallelProcessing: false,
+                        verbosity: 'detailed'
+                        //configFile: 'path/to/nuget.config'
+
+                    };
+
+                    nuget.restore(arg)
+                        .then(function(){
+                            console.log('done');
+                            resolve();
+                        })
+                        .fail(function(error) {
+                            console.log(error.message);
+                            reject(error.message);
+                        });
+
+                });
+                return nextPromise;
+            };
+
+            promise = promise.then(function() {return run();});
+        });
+        promise.then(function(){ done(); });
     });
 
-    done();
-
-});
-
-gulp.task('get-nuget',  function(done) {
-
-	mkdirp.sync(nugetDir);
-	var zipExists = fs.existsSync(nugetDir);
-
-	if(zipExists){
-		done();
-        return;
-	}
-
-    console.log('getting nuget');
-
-	request(downloadLocation)
-		.pipe(fs.createWriteStream(runnerFileName))
-		.on('end', function () { done(); });
 });

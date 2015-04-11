@@ -88,6 +88,6 @@ gulp.task('nunit-download', function(done) {
 
 	request(nunitLocation)
 		.pipe(fs.createWriteStream(file))
-		.on('end', function () { done(); });
+		.on('finish', function () { done(); });
 
 });

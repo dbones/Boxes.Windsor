@@ -5,9 +5,9 @@ var runSequence = require('run-sequence');
 gulp.task('build-all', function(done) {
 
     runSequence(
-        'assemblyInfo',
+        ['assemblyInfo', 'restore-dependencies'],
         'compile',
-        'test',
+        //'test',
         'package',
         done);
 
