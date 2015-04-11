@@ -16,7 +16,7 @@
         <language>es-US</language>
         <tags>Composition Plugin Module Modular Package Bundle Isolated ioc di inversionofcontrol dependencyinjection Windsor</tags>
         <dependencies>
-            <dependency id="Boxes.Integration" version="*" />
+            <dependency id="Boxes.Integration" version="0.4.27" />
 			<dependency id="Castle.Windsor" version="3.2.1"/>
         </dependencies>
 	</metadata>
