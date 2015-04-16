@@ -18,6 +18,7 @@
   "homepage": "https://github.com/dbones/Boxes.Windsor",
   "devDependencies": {
     "es6-promise": "^2.0.1",
+    "eyes": "^0.1.8",
     "glob": "^5.0.3",
     "gulp": "^3.8.11",
     "gulp-dotnet-assembly-info": "^0.1.10",
@@ -33,7 +34,9 @@
     "require-dir": "^0.3.0",
     "run-sequence": "^1.0.2",
     "unzip": "^0.1.11",
+    "xml2js": "^0.4.6",
     "xmlpoke": "^0.1.9",
+    "xmlreader": "^0.2.3",
     "yargs": "^3.7.0"
   }
 }

@@ -28,8 +28,6 @@ if(config.command.package.configFile != null) {
 var nuget = Nuget(defaultSettings);
 
 
-
-
 gulp.task('package', ['get-nuget'], function(done) {
 
     mkdirp.sync(outputDir);
